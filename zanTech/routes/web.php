@@ -46,6 +46,7 @@ Route::get('/delete/{id}','deleteCategory')->name('deleteCategory')->middleware(
 Route::get('/search-products', 'searchProducts')->name('searchProducts')->middleware();
 Route::get('/add-new-catagory', 'addCatagory')->name('addCatagoryPage')->middleware();
 Route::post('/add-new-catagory', 'addNewCatagory')->name('addNewCatagory')->middleware();
+Route::get('/static', 'showMultipleViews')->name('loadStaticPages')->middleware();
 
 });
 
@@ -56,7 +57,14 @@ Route::controller(productController::class)->group(function () {
     Route::get('/product-detail/{id}', 'viewProductDetailInformationNew')->name('addProductToWishListNew');
     Route::get('/favorite-product-list', 'viewWishList')->name('viewWishList');
     Route::get('/favorite-total-list/{id}', 'totalWishListCount')->name('totalWishList');
-    // Route::get('/favorite-product/{id}', 'addProductToWishListSection')->name('addProductToWishList');
+    Route::get('/remove-from-list/{id}', 'removeWisListhPrduct')->name('removeWishPrduct');
+    Route::post('/add-to-cart/{id}', 'addToCartPrduct')->name('addToCart');
+    Route::get('/show-cart', 'DisplayCartPrduct')->name('showCart');
+    Route::get('/remove-cart/{id}', 'removeFromCart')->name('removeFromCart');
+    Route::get('/update-cart/{id}', 'updateCartInfo')->name('updateCart');
+    Route::get('/checkout-cart', 'checkOutCartPage')->name('checkOutCart');
+    Route::post('/checkout-order/{id}', 'CustomerPlaceOrder')->name('placeOrder');
+
 });
 
 

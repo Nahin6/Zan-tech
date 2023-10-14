@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderItems;
 use App\Models\Product;
 use App\Models\WishlistItem;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
+use ShoppingCart;
 
 class productController extends Controller
 {
-
+private $cartProduct;
     public function showProductsInPriceRange()
     {
         $products = Product::all();
@@ -75,5 +78,133 @@ class productController extends Controller
 
         $totalWish=WishlistItem::count($id);
         return view('dashboard.navBar', compact('totalWish'));
+    }
+    public function removeWisListhPrduct($id){
+
+
+        $remove=WishlistItem::find($id);
+        if ($remove) {
+            $remove->delete();
+            Alert::success('Removed!!', 'Removed from wish list');
+            return redirect()->back();
+        }
+        else{
+            Alert::error('Error!!', 'errrrrrrr');
+            return redirect()->back();
+        }
+
+
+    }
+
+    public function addToCartPrduct(Request $request, $id){
+
+        $this->cartProduct = Product::find($id);
+        ShoppingCart::add(
+            $this->cartProduct->id,
+            $this->cartProduct->productName,
+            $request->qty,
+            $this->cartProduct->productPrice,
+            [
+                'productImg'=>$this->cartProduct->productImg
+            ]
+        );
+        Alert::success('Added!!', 'Product added to cart');
+            return redirect()->back();
+    }
+
+    public function DisplayCartPrduct(){
+
+        $showCart = ShoppingCart::all();
+
+        return view('products.cartProductPage', compact('showCart'));
+    }
+    public function removeFromCart($id){
+
+      ShoppingCart::remove($id);
+      Alert::error('Removed!!', 'product removed from cart');
+        return redirect()->back();
+    }
+    public function updateCartInfo($id,Request $request){
+
+      ShoppingCart::update($id, $request->qty);
+      Alert::success('Update!!', 'Cart updated');
+        return redirect()->back();
+    }
+
+    public function checkOutCartPage(){
+        if (Auth::check() && Auth::user()->userType === '0') {
+            $chekoutCart = ShoppingCart::all();
+            return view('products.checkOutProduct', compact('chekoutCart'));
+        }
+        else{
+            return  redirect('/loginnn');
+            Alert::error('Error', 'Please Login first');
+        }
+
+    }
+    public function CustomerPlaceOrder($id, Request $request){
+        if (Auth::check() && Auth::user()->userType === '0') {
+
+            $request->validate([
+                'division' => 'required',
+                'streetAddress' => 'required',
+                'homeAddress' => 'required',
+                'city' => 'required',
+            ]);
+
+            $division = $request->input('deliveryCharge');
+            $totalBill = $request->input('totalBill');
+
+        // Set the default delivery charge
+            $deliveryCharge = 0;
+
+        // Check the division and add delivery charge if it's Dhaka
+        if ($division === 'insideDhaka') {
+            $deliveryCharge = 60;
+        }
+       if($division === 'outsideDhaka'){
+        $deliveryCharge = 120;
+        }
+
+        // Calculate the final total bill with the delivery charge
+        $finalTotalBill = $totalBill + $deliveryCharge;
+        // $request->merge(['totalBill' => $finalTotalBill]);
+          $order =  Order::create([
+                'customerId'=>Auth::user()->id,
+                'totalBill'=>$finalTotalBill,
+                'customerName'=>Auth::user()->name,
+                'customerDivision'=>$request->input('division'),
+                'customerStreetAdress'=>$request->input('streetAddress'),
+                'customerHomeAdress'=>$request->input('homeAddress'),
+                'customerCity'=>$request->input('city'),
+                'customerAditonalNotes'=>$request->input('addtionalInfo'),
+                'customerPromoCode'=>$request->input('promoCode'),
+                'deliveryCharge'=>$request->input('deliveryCharge'),
+                'customerPhone'=>Auth::user()->phone,
+                'customerEmail'=>Auth::user()->email,
+                'orderStatus'=>'pending'
+
+            ]);
+            $cartItems = ShoppingCart::all();
+
+            // Loop through the cart items and store them in the order_items table
+            foreach ($cartItems as $cartItem) {
+                $totalPrice = $cartItem->price*$cartItem->qty;
+                OrderItems::create([
+                    'productName' => $cartItem->name,
+                    'productPrice' => $totalPrice,
+                    'productQuantity' => $cartItem->qty,
+                    'orderId' => $order->id,
+                ]);
+            }
+            ShoppingCart::destroy($id);
+            Alert::success('Successfull', 'Order Placed Successfully');
+            return redirect()->back();
+        }
+        else{
+            return  redirect('/loginnn');
+            Alert::error('Error', 'Please Login first');
+        }
+
     }
 }

@@ -168,11 +168,11 @@
       keepImg: true,
     });
   }
-  
+
 
   // document ready
   $(document).ready(function() {
-    
+
     initPreloader();
     initSwiper();
     initProductQty();
@@ -181,7 +181,34 @@
 
   }); // End of a document
 
-  
+
 
 })(jQuery);
+
+    $(document).ready(function() {
+        // Wait for the document to be fully loaded
+
+        // Find the success message div by its ID
+        var successMessage = $('#success-message');
+
+        // Check if the success message div exists
+        if (successMessage.length) {
+            // Set a timeout to hide the div after 4 seconds (4000 milliseconds)
+            setTimeout(function() {
+                successMessage.slideUp(); // Hide the div with a slide-up animation
+            }, 5000); // 4000 milliseconds (4 seconds)
+        }
+    });
+
+    function increaseQty(button) {
+    const input = button.closest('.product-qty').querySelector('.quantity');
+    input.value = parseInt(input.value) + 1;
+}
+
+function decreaseQty(button) {
+    const input = button.closest('.product-qty').querySelector('.quantity');
+    if (input.value > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
 

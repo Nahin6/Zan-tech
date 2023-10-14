@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Product;
 use Illuminate\Support\Facades\View;
+use ShoppingCart;
 class LoadProductData
 {
     /**
@@ -19,10 +20,12 @@ class LoadProductData
         $products = Product::all();
         // $bestProducts = Product::whereBetween('productPrice', [0, 200])->get();
         $latestProducts = Product::latest()->take(10)->get();
+        $showCart= ShoppingCart::all();
 
         View::share('products', $products);
         View::share('bestProducts', $latestProducts);
-      
+        View::share('showCart', $showCart);
+
         return $next($request);
     }
 }

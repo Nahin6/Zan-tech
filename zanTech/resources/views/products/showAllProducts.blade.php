@@ -78,7 +78,6 @@
                     <div class="tabs-header d-flex justify-content-between border-bottom my-5">
                         <h3>All Products</h3>
                         @include('sweetalert::alert')
-
                         @if ($message = Session::get('success'))
                             <div id="success-message" class="alert alert-success">
                                 <p>{{ $message }}</p>
@@ -121,70 +120,100 @@
                                                 <i
                                                     class="fa-solid fa-bangladeshi-taka-sign"></i>{{ $products->productPrice }}
                                             </span>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="input-group product-qty">
-                                                    <span class="input-group-btn">
-                                                        <button type="button"
-                                                            class="quantity-left-minus btn btn-danger btn-number"
-                                                            data-type="minus">
-                                                            <svg width="16" height="16">
-                                                                <use xlink:href="#minus"></use>
-                                                            </svg>
-                                                        </button>
-                                                    </span>
-                                                    <input type="text" name="quantity"
-                                                        class="form-control input-number quantity" value="1"
-                                                        min="1" max="{{ $products->productQuantity }}">
-                                                    <span class="input-group-btn">
-                                                        <button type="button"
-                                                            class="quantity-right-plus btn btn-success btn-number"
-                                                            data-type="plus">
-                                                            <svg width="16" height="16">
-                                                                <use xlink:href="#plus"></use>
-                                                            </svg>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                                {{-- <input type="number" name="quantity" class="form-control input-number quantity" value="1" min="1" max="{{ $products->productQuantity }}"> --}}
+                                            <form action="{{ route('addToCart', $products->id) }}" method="POST"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <div class="input-group product-qty">
+                                                        <span class="input-group-btn">
+                                                            <button type="button"
+                                                            id="decreaseQtyButton"
+                                                                class="quantity-left-minus btn btn-danger btn-number"
+                                                                data-type="minus">
+                                                                <svg width="16" height="16">
+                                                                    <use xlink:href="#minus"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </span>
+                                                        <input type="text" name="qty"
+                                                            class="form-control input-number quantity" value="{{ old('qty', 1) }}" min="1" max="{{ $products->productQuantity }}">
 
+                                                        <span class="input-group-btn">
+                                                            <button type="button"
+                                                            id="increaseQtyButton"
+                                                                class="quantity-right-plus btn btn-success btn-number"
+                                                                data-type="plus">
+                                                                <svg width="16" height="16">
+                                                                    <use xlink:href="#plus"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    {{-- <input type="number" name="quantity" class="form-control input-number quantity" value="1" min="1" max="{{ $products->productQuantity }}"> --}}
+                                                    <button  class="nav-link">Add to Cart
+                                                        <svg width="18" height="18">
+                                                            <use xlink:href="#cart"></use>
+                                                        </svg>
+                                                    </button>
+                                            </form>
 
-
-                                                <a href="#" class="nav-link">Add to Cart
-                                                    <svg width="18" height="18">
-                                                        <use xlink:href="#cart"></use>
-                                                    </svg>
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
-                                @endforeach
                             </div>
-                            <!-- / product-grid -->
-
+                            @endforeach
                         </div>
+                        <!-- / product-grid -->
 
                     </div>
-                </div>
 
+                </div>
             </div>
+
         </div>
+    </div>
     </div>
 </section>
 
 
 <script>
-    $(document).ready(function() {
-        // Wait for the document to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const qtyInput = document.querySelector('input[name="qty"]');
+        const increaseQtyButton = document.getElementById('increaseQtyButton');
+        const decreaseQtyButton = document.getElementById('decreaseQtyButton'); // Add this
+        const productQuantity = {{ $products->productQuantity }}; // Replace with your actual product quantity
 
-        // Find the success message div by its ID
-        var successMessage = $('#success-message');
+        increaseQtyButton.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value);
 
-        // Check if the success message div exists
-        if (successMessage.length) {
-            // Set a timeout to hide the div after 4 seconds (4000 milliseconds)
-            setTimeout(function() {
-                successMessage.slideUp(); // Hide the div with a slide-up animation
-            }, 5000); // 4000 milliseconds (4 seconds)
-        }
+            // Disable the "+" button when the input reaches the product quantity
+            if (parseInt(qtyInput.value) === productQuantity) {
+                increaseQtyButton.setAttribute('disabled', true);
+            }
+
+            // Enable the "-" button when increasing the quantity
+            decreaseQtyButton.removeAttribute('disabled');
+        });
+
+        decreaseQtyButton.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value);
+
+
+            // Enable the "+" button when decreasing the quantity
+            increaseQtyButton.removeAttribute('disabled');
+
+            // Disable the "-" button when the input reaches 1
+            if (parseInt(qtyInput.value) === 1) {
+                decreaseQtyButton.setAttribute('disabled', true);
+            }
+        });
+
+        qtyInput.addEventListener('input', function() {
+            if (parseInt(qtyInput.value) < productQuantity) {
+                increaseQtyButton.removeAttribute('disabled');
+            }
+            if (parseInt(qtyInput.value) > 1) {
+                decreaseQtyButton.removeAttribute('disabled');
+            }
+        });
     });
 </script>

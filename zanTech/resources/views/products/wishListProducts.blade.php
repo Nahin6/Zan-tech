@@ -19,6 +19,7 @@
 
             </div>
         </div>
+        @include('sweetalert::alert')
         <div class="row">
             <div class="col-md-12">
                 <div class="products-carousel swiper">
@@ -26,7 +27,7 @@
                         @foreach ($wishlistItems as $item)
                             @if ($item->product)
                                 <div class="product-item swiper-slide">
-                                    <a href="" class="btn-wishlist" data-toggle="tooltip" data-placement="top" title="Remove from Wish List">
+                                    <a href="{{ route('removeWishPrduct', $item->product->id) }}" class="btn-wishlist" data-toggle="tooltip" data-placement="top" title="Remove from Wish List">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </a>
 
@@ -41,35 +42,38 @@
                                     <h3>{{ $item->product->productName }}</h3>
                                     <span class="qty">{{ $item->product->productQuantity }} In stock</span>
                                     <span class="price">{{ $item->product->productPrice }}</span>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="input-group product-qty">
-                                            <span class="input-group-btn">
-                                                <button type="button"
-                                                    class="quantity-left-minus btn btn-danger btn-number"
-                                                    data-type="minus">
-                                                    <svg width="16" height="16">
-                                                        <use xlink:href="#minus"></use>
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                            <input type="text" name="quantity"
-                                                class="form-control input-number quantity" value="1">
-                                            <span class="input-group-btn">
-                                                <button type="button"
-                                                    class="quantity-right-plus btn btn-success btn-number"
-                                                    data-type="plus">
-                                                    <svg width="16" height="16">
-                                                        <use xlink:href="#plus"></use>
-                                                    </svg>
-                                                </button>
-                                            </span>
+                                    <form action="{{ route('addToCart', $item->product->id) }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="input-group product-qty">
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                        class="quantity-left-minus btn btn-danger btn-number"
+                                                        data-type="minus">
+                                                        <svg width="16" height="16">
+                                                            <use xlink:href="#minus"></use>
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                                <input type="text" name="qty"
+                                                    class="form-control input-number quantity" value="1">
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                        class="quantity-right-plus btn btn-success btn-number"
+                                                        data-type="plus">
+                                                        <svg width="16" height="16">
+                                                            <use xlink:href="#plus"></use>
+                                                        </svg>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <button href="#" class="nav-link">Add to Cart <svg width="18"
+                                                    height="18">
+                                                    <use xlink:href="#cart"></use>
+                                                </svg></button>
                                         </div>
-                                        <a href="#" class="nav-link">Add to Cart
-                                            <svg width="18" height="18">
-                                                <use xlink:href="#cart"></use>
-                                            </svg>
-                                        </a>
-                                    </div>
+                                    </form>
                                 </div>
                             @else
                                 <p>No associated product found.</p>
@@ -84,3 +88,4 @@
 </section>
 
 @include('dashboard.footer')
+

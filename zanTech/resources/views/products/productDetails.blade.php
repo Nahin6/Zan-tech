@@ -12,6 +12,9 @@
                         <div class="swiper product-thumbnail-slider">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
+                                    <form action="{{ route('addToCart', $productDetails->id) }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
                                     <img src="{{ asset('public/product_images/' . $productDetails->productImg) }}"
                                         alt="errr" class="thumb-image img-fluid">
                                 </div>
@@ -54,21 +57,25 @@
                             </div>
                             <div class="stock-button-wrap">
                                 <!-- quntiyt slide button -->
-                                <div class="input-group product-qty" style="max-width: 150px;">
+                                <div class="input-group product-qty"  style="max-width: 200px;">
                                     <span class="input-group-btn">
-                                        <button type="button" class="quantity-left-minus btn btn-light btn-number"
-                                            data-type="minus" data-field="">
+                                        <button type="button"
+                                        id="decreaseQtyButton"
+                                            class="quantity-left-minus btn btn-danger btn-number"
+                                            data-type="minus">
+
                                             <svg width="16" height="16">
                                                 <use xlink:href="#minus"></use>
                                             </svg>
                                         </button>
                                     </span>
-                                    <input type="text" id="quantity" name="quantity"
-                                        class="form-control input-number text-center" value="1" min="1"
-                                        max="100">
+                                    <input type="text" name="qty"
+                                        class="form-control input-number quantity" value="{{ old('qty', 1) }}" min="1" max="{{ $productDetails->productQuantity }}">
                                     <span class="input-group-btn">
-                                        <button type="button" class="quantity-right-plus btn btn-light btn-number"
-                                            data-type="plus" data-field="">
+                                        <button type="button"
+                                        id="increaseQtyButton"
+                                            class="quantity-right-plus btn btn-success btn-number"
+                                            data-type="plus">
                                             <svg width="16" height="16">
                                                 <use xlink:href="#plus"></use>
                                             </svg>
@@ -77,10 +84,12 @@
                                 </div>
                                 <div class="qty-button d-flex flex-wrap pt-3">
                                     <!-- Buy now button -->
-                                    <button type="submit"
-                                        class="btn btn-primary py-3 px-4 text-uppercase me-3 mt-3">Buy now</button>
+
+                                    {{-- <button type="submit"
+                                        class="btn btn-primary py-3 px-4 text-uppercase me-3 mt-3">Buy now</button> --}}
                                     <button type="submit" name="add-to-cart" value="1269"
                                         class="btn btn-dark py-3 px-4 text-uppercase mt-3">Add to cart</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +142,7 @@
         <div class="col-md-12">
 
           <div class="section-header d-flex justify-content-between">
-            
+
             <h2 class="section-title">Related Products</h2>
 
             <div class="d-flex align-items-center">
@@ -141,10 +150,10 @@
               <div class="swiper-buttons">
                 <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
                 <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
-              </div>  
+              </div>
             </div>
           </div>
-          
+
         </div>
       </div>
       <div class="row">
@@ -162,25 +171,47 @@
                 </figure>
                 <h3>{{ $relatedProduct->productName }}</h3>
                 <span class="qty">{{ $relatedProduct->productQuantity }} In stock</span>
-                
+
                 <span class="price">{{ $relatedProduct->productPrice }}</span>
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="input-group product-qty">
-                      <span class="input-group-btn">
-                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
-                            <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
-                          </button>
-                      </span>
-                      <input type="text" name="quantity" class="form-control input-number quantity" value="1">
-                      <span class="input-group-btn">
-                          <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
-                              <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
-                          </button>
-                      </span>
-                  </div>
-                  <a href="#" class="nav-link">Add to Cart <svg width="18" height="18"><use xlink:href="#cart"></use></svg></a>
-                </div>
-              </div>     
+                <form action="{{ route('addToCart', $relatedProduct->id) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="input-group product-qty"  style="max-width: 200px;">
+                            <span class="input-group-btn">
+                                <button type="button"
+                                id="decreaseQtyButton"
+                                    class="quantity-left-minus btn btn-danger btn-number"
+                                    data-type="minus">
+
+                                    <svg width="16" height="16">
+                                        <use xlink:href="#minus"></use>
+                                    </svg>
+                                </button>
+                            </span>
+                            <input type="text" name="qty"
+                                class="form-control input-number quantity" value="{{ old('qty', 1) }}" min="1" max="{{ $productDetails->productQuantity }}">
+                            <span class="input-group-btn">
+                                <button type="button"
+                                id="increaseQtyButton"
+                                    class="quantity-right-plus btn btn-success btn-number"
+                                    data-type="plus">
+                                    <svg width="16" height="16">
+                                        <use xlink:href="#plus"></use>
+                                    </svg>
+                                </button>
+                            </span>
+                        </div>
+                        <form action="{{ route('addToCart', $productDetails->id) }}" method="POST"
+                            enctype="multipart/form-data">
+                        <button href="" class="nav-link">Add to Cart <svg width="18"
+                                height="18">
+                                <use xlink:href="#cart"></use>
+                            </svg></button>
+                        </form>
+                    </div>
+                </form>
+              </div>
               @endforeach
             </div>
           </div>
@@ -191,3 +222,48 @@
     </div>
   </section>
   @include('dashboard.footer')
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const qtyInput = document.querySelector('input[name="qty"]');
+        const increaseQtyButton = document.getElementById('increaseQtyButton');
+        const decreaseQtyButton = document.getElementById('decreaseQtyButton'); // Add this
+        const productQuantity = {{ $productDetails->productQuantity }}; // Replace with your actual product quantity
+
+        increaseQtyButton.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value);
+
+            // Disable the "+" button when the input reaches the product quantity
+            if (parseInt(qtyInput.value) === productQuantity) {
+                increaseQtyButton.setAttribute('disabled', true);
+            }
+
+            // Enable the "-" button when increasing the quantity
+            decreaseQtyButton.removeAttribute('disabled');
+        });
+
+        decreaseQtyButton.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value);
+
+
+            // Enable the "+" button when decreasing the quantity
+            increaseQtyButton.removeAttribute('disabled');
+
+            // Disable the "-" button when the input reaches 1
+            if (parseInt(qtyInput.value) === 1) {
+                decreaseQtyButton.setAttribute('disabled', true);
+            }
+        });
+
+        qtyInput.addEventListener('input', function() {
+            if (parseInt(qtyInput.value) < productQuantity) {
+                increaseQtyButton.removeAttribute('disabled');
+            }
+            if (parseInt(qtyInput.value) > 1) {
+                decreaseQtyButton.removeAttribute('disabled');
+            }
+        });
+    });
+</script>

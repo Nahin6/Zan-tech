@@ -95,11 +95,14 @@
                         @endauth
                     @endif
                     <li class="d-lg-none">
-                        <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas"
+                        <a href="#" class="rounded-circle bg-light p-2 mx-1 position-relative" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                             <svg width="24" height="24" viewBox="0 0 24 24">
                                 <use xlink:href="#cart"></use>
                             </svg>
+                            <span
+                            class="badge bg-red text-black position-absolute top-0 start-100 translate-middle badge-rounded-circle"> {{ ShoppingCart::count() }}
+                        </span>
                         </a>
                     </li>
                     <li class="d-lg-none">
@@ -115,9 +118,14 @@
                 <div class="cart text-end d-none d-lg-block dropdown">
                     <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                        @auth
+                        <span class="fs-6 text-muted dropdown-toggle">{{ Auth::user()->name }} Cart</span>
+                        @else
                         <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
+                        @endauth
+
                         <span class="cart-total fs-5 fw-bold"><i class="fa-solid fa-bangladeshi-taka-sign"></i>
-                            1290.00</span>
+                            {{ ShoppingCart::total() }}</span>
                     </button>
                 </div>
             </div>
@@ -166,7 +174,7 @@
                                     <a href="#men" class="nav-link fw-bold">Robotics Package</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#kids" class="nav-link fw-bold">Project</a>
+                                    <a href="{{ route('showCart') }}" class="nav-link fw-bold">Cart Items</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="#accessories" class="nav-link fw-bold">Popular</a>
@@ -176,17 +184,16 @@
                                         <li class="nav-item">
                                             <a href="#brand" class="nav-link fw-bold">Track Order</a>
                                         </li>
-                                    @else
-                                        <li class="nav-item">
-                                            <a href="#brand" class="nav-link fw-bold">Tutorial</a>
-                                        </li>
                                     @endauth
                                 @endif
                                 <li class="nav-item">
-                                    <a href="#sale" class="nav-link fw-bold">About us</a>
+                                    <a href="#brand" class="nav-link fw-bold">Tutorial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('loadStaticPages') }}" class="nav-link fw-bold">About us</a>
                                 </li>
                                 <li class="nav-item fw-bold">
-                                    <a href="#blog" class="nav-link">Contact</a>
+                                    <a href="{{ route('loadStaticPages') }}" class="nav-link">Contact</a>
                                 </li>
                             </ul>
 

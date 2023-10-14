@@ -217,4 +217,9 @@ class adminController extends Controller
 
     //     return view('admin.producList', compact('product'));
     // }
+
+    public function showMultipleViews(){
+            return view('dashboard.aboutUs');
+            return view('dashboard.contactPage');
+    }
 }
