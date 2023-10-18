@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('customerPromoCode')->nullable();
             $table->string('customerPhone');
             $table->string('customerEmail');
+            $table->string('randInvoice')->unique();
             $table->string('deliveryCharge')->nullable();
             $table->float('totalBill');
             $table->string('orderStatus');

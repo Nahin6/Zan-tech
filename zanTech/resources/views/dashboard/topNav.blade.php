@@ -75,7 +75,7 @@
         <div class="order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 @auth
-                    <span class="text-primary">{{ auth()->user()->name }} cart</span>
+                    <span class="text-primary" style="color: blue">{{ auth()->user()->name }}'s cart</span>
                 @else
                     <span class="text-primary">Your Cart</span>
                 @endauth
@@ -91,7 +91,7 @@
 
                         <div>
                             <h6 class="my-0">{{ $showCarts->name }}</h6>
-                            <small class="text-body-secondary">{{ $showCarts->qty }}</small>
+                            <small class="text-body-secondary ">{{ $showCarts->qty }}</small>
                         </div>
                         <span class="text-body-secondary"><i class="fa-solid fa-bangladeshi-taka-sign"></i>
                             {{ $showCarts->price }}</span>
@@ -107,6 +107,8 @@
 
             <a href="{{ route('checkOutCart') }}" class="w-100 btn btn-primary btn-lg" type="submit">Continue to
                 checkout</a>
+
+            <a href="{{ route('showCart') }}" class="w-100 mt-2 btn btn-dark btn-lg" type="submit">View Product in Cart</a>
         </div>
     </div>
 </div>
@@ -120,8 +122,8 @@
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-primary">Search</span>
             </h4>
-            <form role="search" action="index.html" method="get" class="d-flex mt-3 gap-0">
-                <input class="form-control rounded-start rounded-0 bg-light" type="email"
+            <form role="search" method="GET" action="{{ route('searchProducts') }}">
+                <input class="form-control rounded-start rounded-0 bg-light" name="search" type="text"
                     placeholder="What are you looking for?" aria-label="What are you looking for?">
                 <button class="btn btn-dark rounded-end rounded-0" type="submit">Search</button>
             </form>

@@ -10,17 +10,29 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use ShoppingCart;
+use Illuminate\Support\Facades\DB;
 
 class productController extends Controller
 {
-private $cartProduct;
+    private $cartProduct;
+
     public function showProductsInPriceRange()
     {
         $products = Product::all();
-
-        // $bestProducts = Product::whereBetween('productPrice', [0, 200])->get();
+        // -------------------------------------------
         $latestProducts = Product::latest()->take(10)->get();
-        return view('dashboard.dashboard', compact('latestProducts', 'products'));
+        // -------------------------------------------
+        $trendingProductCounts = DB::table('order_items')
+            ->select('productName', DB::raw('COUNT(*) as order_count'))
+            ->groupBy('productName')
+            ->orderBy('order_count', 'desc')
+            ->limit(15)
+            ->pluck('productName');
+        $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
+        ->get();
+
+
+        return view('dashboard.dashboard', compact('latestProducts', 'products', 'trendingProducts'));
     }
     public function viewProductDetailInformation($id, Request $request)
     {
@@ -59,12 +71,7 @@ private $cartProduct;
             $user = Auth::user();
 
             if ($user) {
-                $wishlistItems = WishlistItem::where('user_id', $user->id)->with('product')->take(15)->get();
-
-                if ($wishlistItems->isEmpty()) {
-
-                    return redirect()->back()->with('success', 'Wish List is Empty.');
-                } else {
+                $wishlistItems = WishlistItem::where('user_id', $user->id)->with('product')->take(15)->get(); {
                     return view('products.wishListProducts', compact('wishlistItems'));
                 }
             }
@@ -74,29 +81,28 @@ private $cartProduct;
         }
     }
 
-    public function totalWishListCount($id){
+    public function totalWishListCount($id)
+    {
 
-        $totalWish=WishlistItem::count($id);
+        $totalWish = WishlistItem::count($id);
         return view('dashboard.navBar', compact('totalWish'));
     }
-    public function removeWisListhPrduct($id){
+    public function removeWisListhPrduct($id)
+    {
 
-
-        $remove=WishlistItem::find($id);
+        $remove = WishlistItem::find($id);
         if ($remove) {
             $remove->delete();
             Alert::success('Removed!!', 'Removed from wish list');
             return redirect()->back();
-        }
-        else{
+        } else {
             Alert::error('Error!!', 'errrrrrrr');
             return redirect()->back();
         }
-
-
     }
 
-    public function addToCartPrduct(Request $request, $id){
+    public function addToCartPrduct(Request $request, $id)
+    {
 
         $this->cartProduct = Product::find($id);
         ShoppingCart::add(
@@ -105,44 +111,64 @@ private $cartProduct;
             $request->qty,
             $this->cartProduct->productPrice,
             [
-                'productImg'=>$this->cartProduct->productImg
+                'productImg' => $this->cartProduct->productImg
             ]
         );
         Alert::success('Added!!', 'Product added to cart');
-            return redirect()->back();
+        return redirect()->back();
     }
 
-    public function DisplayCartPrduct(){
+    public function DisplayCartPrduct()
+    {
 
         $showCart = ShoppingCart::all();
-
-        return view('products.cartProductPage', compact('showCart'));
+        $productQuantities = Product::all();
+        return view('products.cartProductPage', compact('showCart', 'productQuantities'));
     }
-    public function removeFromCart($id){
+    public function removeFromCart($id)
+    {
 
-      ShoppingCart::remove($id);
-      Alert::error('Removed!!', 'product removed from cart');
+        ShoppingCart::remove($id);
+        Alert::error('Removed!!', 'product removed from cart');
         return redirect()->back();
     }
-    public function updateCartInfo($id,Request $request){
+    public function updateCartInfo($id, Request $request)
+    {
 
-      ShoppingCart::update($id, $request->qty);
-      Alert::success('Update!!', 'Cart updated');
+        ShoppingCart::update($id, $request->qty);
+        //   Alert::success('Update!!', 'Cart updated');
         return redirect()->back();
     }
 
-    public function checkOutCartPage(){
+    public function checkOutCartPage()
+    {
         if (Auth::check() && Auth::user()->userType === '0') {
             $chekoutCart = ShoppingCart::all();
             return view('products.checkOutProduct', compact('chekoutCart'));
-        }
-        else{
+        } else {
             return  redirect('/loginnn');
             Alert::error('Error', 'Please Login first');
         }
-
     }
-    public function CustomerPlaceOrder($id, Request $request){
+
+    // function generateRandomInvoiceNumber($length = 8)
+    // {
+    //     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    //     $invoiceNumber = '';
+
+    //     for ($i = 0; $i < $length; $i++) {
+    //         $invoiceNumber .= $characters[rand(0, strlen($characters) - 1)];
+    //     }
+
+
+    //     $invoiceNumber = generateRandomInvoiceNumber();
+    //     return $invoiceNumber;
+    // }
+
+
+
+    public function CustomerPlaceOrder($id, Request $request)
+    {
         if (Auth::check() && Auth::user()->userType === '0') {
 
             $request->validate([
@@ -151,45 +177,59 @@ private $cartProduct;
                 'homeAddress' => 'required',
                 'city' => 'required',
             ]);
+            $length = 8;
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $invoiceNumber = '';
+            for ($i = 0; $i < $length; $i++) {
+                $invoiceNumber .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            $invoiceNumber;
 
             $division = $request->input('deliveryCharge');
             $totalBill = $request->input('totalBill');
 
-        // Set the default delivery charge
+            // Set the default delivery charge
             $deliveryCharge = 0;
 
-        // Check the division and add delivery charge if it's Dhaka
-        if ($division === 'insideDhaka') {
-            $deliveryCharge = 60;
-        }
-       if($division === 'outsideDhaka'){
-        $deliveryCharge = 120;
-        }
+            // Check the division and add delivery charge if it's Dhaka
+            if ($division === 'insideDhaka') {
+                $deliveryCharge = 60;
+            }
+            if ($division === 'outsideDhaka') {
+                $deliveryCharge = 120;
+            }
 
-        // Calculate the final total bill with the delivery charge
-        $finalTotalBill = $totalBill + $deliveryCharge;
-        // $request->merge(['totalBill' => $finalTotalBill]);
-          $order =  Order::create([
-                'customerId'=>Auth::user()->id,
-                'totalBill'=>$finalTotalBill,
-                'customerName'=>Auth::user()->name,
-                'customerDivision'=>$request->input('division'),
-                'customerStreetAdress'=>$request->input('streetAddress'),
-                'customerHomeAdress'=>$request->input('homeAddress'),
-                'customerCity'=>$request->input('city'),
-                'customerAditonalNotes'=>$request->input('addtionalInfo'),
-                'customerPromoCode'=>$request->input('promoCode'),
-                'deliveryCharge'=>$request->input('deliveryCharge'),
-                'customerPhone'=>Auth::user()->phone,
-                'customerEmail'=>Auth::user()->email,
-                'orderStatus'=>'pending'
+            $finalTotalBill = $totalBill + $deliveryCharge;
+
+            $order =  Order::create([
+                'customerId' => Auth::user()->id,
+                'totalBill' => $finalTotalBill,
+                'customerName' => Auth::user()->name,
+                'customerDivision' => $request->input('division'),
+                'customerStreetAdress' => $request->input('streetAddress'),
+                'customerHomeAdress' => $request->input('homeAddress'),
+                'customerCity' => $request->input('city'),
+                'customerAditonalNotes' => $request->input('addtionalInfo'),
+                'customerPromoCode' => $request->input('promoCode'),
+                'deliveryCharge' => $request->input('deliveryCharge'),
+                'customerPhone' => Auth::user()->phone,
+                'customerEmail' => Auth::user()->email,
+                'randInvoice' => $invoiceNumber,
+                'orderStatus' => 'pending'
 
             ]);
             $cartItems = ShoppingCart::all();
 
             // Loop through the cart items and store them in the order_items table
             foreach ($cartItems as $cartItem) {
-                $totalPrice = $cartItem->price*$cartItem->qty;
+                $totalPrice = $cartItem->price * $cartItem->qty;
+                $product = Product::find($cartItem->id);
+
+                if ($product) {
+                    // Decrease the available quantity by the ordered quantity
+                    $product->productQuantity -= $cartItem->qty;
+                    $product->save();
+                }
                 OrderItems::create([
                     'productName' => $cartItem->name,
                     'productPrice' => $totalPrice,
@@ -200,11 +240,14 @@ private $cartProduct;
             ShoppingCart::destroy($id);
             Alert::success('Successfull', 'Order Placed Successfully');
             return redirect()->back();
-        }
-        else{
+        } else {
             return  redirect('/loginnn');
             Alert::error('Error', 'Please Login first');
         }
+    }
 
+    public function viewAllShop()
+    {
+        return view('products.productShop');
     }
 }

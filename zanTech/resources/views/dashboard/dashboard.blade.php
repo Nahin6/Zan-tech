@@ -7,6 +7,7 @@
 @include('dashboard.topNav')
 @include('dashboard.navBar')
 @include('dashboard.heroSection')
-@include('products.showAllProducts')
+@include('products.mostPopularProduct')
 @include('products.justArrivedWithTopSoldProduct')
+@include('products.showAllProducts')
 @include('dashboard.footer')

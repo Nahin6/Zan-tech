@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Catagory;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
+use Illuminate\Support\Facades\DB;
+use App\Events\ProductDeleted;
 class adminController extends Controller
 {
 
@@ -116,6 +118,7 @@ class adminController extends Controller
                 }
             }
             $product->delete();
+            event(new ProductDeleted($product));
 
             return redirect()->back()->with('success', 'Product deleted successfully');
         } else {
@@ -209,17 +212,86 @@ class adminController extends Controller
         }
     }
 
-    // public function searchProducts(Request $request)
-    // {
-    //     $search = $request->input('search');
+    public function searchProducts(Request $request)
+    {
+        $search = $request->input('search');
 
-    //     $product = Product::where('productName', 'like', "%$search%")->get();
+        $products = Product::where('productName', 'like', "%$search%")->get();
 
-    //     return view('admin.producList', compact('product'));
-    // }
+        return view('products.productShop', compact('products'));
+    }
 
     public function showMultipleViews(){
             return view('dashboard.aboutUs');
+
+    }
+    public function ContactAdmin(){
+
             return view('dashboard.contactPage');
+            // return $this->showMultipleViews('dashboard.contactPage');
+    }
+    public function OrderListView(){
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+
+            $orderItems = DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.orderId')
+            ->select(
+                'orders.id',
+                'orders.customerName',
+                'orders.customerDivision',
+                'orders.customerCity',
+                'orders.customerStreetAdress',
+                'orders.customerHomeAdress',
+                'orders.customerPhone',
+                'orders.customerEmail',
+                'order_items.orderId',
+                'order_items.productName',
+                'order_items.productQuantity',
+                'order_items.productPrice',
+                'orders.deliveryCharge',
+                'orders.randInvoice',
+                'orders.orderStatus'
+            )
+            ->get();
+            return view('admin.viewOrderDetails', compact('orderItems'));
+        }
+        else{
+            return view('auth.login');
+        }
+    }
+
+    public function UpdateStatus($id, $status){
+        if (Auth::check() && Auth::user()->userType === 'Admin') {
+            $updateOrder = Order::find($id);
+            $updateOrder->orderStatus = $status;
+            $updateOrder->save();
+            return back();
+        } else {
+            return view('auth.login');
+        }
+    }
+    public function UpdateOrderToDelivered($id){
+        return $this->UpdateStatus($id, "Delivered");
+    }
+    public function UpdateOrderToProcess($id){
+        return $this->UpdateStatus($id, "Processing");
+    }
+    public function UpdateOrderToNotAvailable($id){
+        return $this->UpdateStatus($id, "Sorry Product not available right now!");
+
+    }
+    public function UpdateOrderToPending($id){
+        return $this->UpdateStatus($id, "Pending");
+
+    }
+    public function deleteOrder($id){
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+            $updateOrder = Order::find($id);
+            $updateOrder->delete();
+            return back();
+        }
+        else{
+            return view('auth.login');
+        }
     }
 }

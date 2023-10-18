@@ -30,45 +30,32 @@
                                         <use xlink:href="#heart"></use>
                                     </svg></a>
                                 <figure>
-                                    <a href="{{ route('viewProductDetails', $bestProducts->id) }}" title="Product Title">
+                                    <a href="{{ route('viewProductDetails', $bestProducts->id) }}"
+                                        title="Product Title">
                                         <img src="{{ asset('public/product_images/' . $bestProducts->productImg) }}"
                                             alt="Product Thumbnail" class="tab-image product-image">
                                     </a>
                                 </figure>
                                 <h3>{{ $bestProducts->productName }}</h3>
                                 <span class="qty">{{ $bestProducts->productQuantity }} In stock</span>
-
                                 <span class="price">{{ $bestProducts->productPrice }}</span>
                                 <form action="{{ route('addToCart', $bestProducts->id) }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <div class="input-group product-qty">
-                                            <span class="input-group-btn">
-                                                <button type="button"
-                                                    class="quantity-left-minus btn btn-danger btn-number"
-                                                    data-type="minus">
-                                                    <svg width="16" height="16">
-                                                        <use xlink:href="#minus"></use>
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                            <input type="text" name="qty"
-                                                class="form-control input-number quantity" value="1">
-                                            <span class="input-group-btn">
-                                                <button type="button"
-                                                    class="quantity-right-plus btn btn-success btn-number"
-                                                    data-type="plus">
-                                                    <svg width="16" height="16">
-                                                        <use xlink:href="#plus"></use>
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <button href="#" class="nav-link">Add to Cart <svg width="18"
-                                                height="18">
-                                                <use xlink:href="#cart"></use>
-                                            </svg></button>
+                                        <input type="text" name="qty" hidden
+                                            class="form-control input-number quantity" value="1">
+                                        @if ($bestProducts->productQuantity == 0)
+                                            <button disabled class="nav-link center-button">Out of stock
+                                                <i class="fa-regular fa-hourglass"></i>
+                                            </button>
+                                        @else
+                                            <button class="nav-link center-button">Add to Cart
+                                                <svg width="18" height="18">
+                                                    <use xlink:href="#cart"></use>
+                                                </svg>
+                                            </button>
+                                        @endif
                                     </div>
                                 </form>
                             </div>
@@ -81,5 +68,3 @@
         </div>
     </div>
 </section>
-
-

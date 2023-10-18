@@ -124,37 +124,20 @@
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="input-group product-qty">
-                                                        <span class="input-group-btn">
-                                                            <button type="button"
-                                                            id="decreaseQtyButton"
-                                                                class="quantity-left-minus btn btn-danger btn-number"
-                                                                data-type="minus">
-                                                                <svg width="16" height="16">
-                                                                    <use xlink:href="#minus"></use>
-                                                                </svg>
-                                                            </button>
-                                                        </span>
-                                                        <input type="text" name="qty"
-                                                            class="form-control input-number quantity" value="{{ old('qty', 1) }}" min="1" max="{{ $products->productQuantity }}">
-
-                                                        <span class="input-group-btn">
-                                                            <button type="button"
-                                                            id="increaseQtyButton"
-                                                                class="quantity-right-plus btn btn-success btn-number"
-                                                                data-type="plus">
-                                                                <svg width="16" height="16">
-                                                                    <use xlink:href="#plus"></use>
-                                                                </svg>
-                                                            </button>
-                                                        </span>
-                                                    </div>
+                                                    <input type="text" name="qty" hidden
+                                                        class="form-control input-number quantity" value="1">
                                                     {{-- <input type="number" name="quantity" class="form-control input-number quantity" value="1" min="1" max="{{ $products->productQuantity }}"> --}}
-                                                    <button  class="nav-link">Add to Cart
-                                                        <svg width="18" height="18">
-                                                            <use xlink:href="#cart"></use>
-                                                        </svg>
-                                                    </button>
+                                                    @if ($products->productQuantity == 0)
+                                                        <button disabled class="nav-link center-button">Out of stock
+                                                            <i class="fa-regular fa-hourglass"></i>
+                                                        </button>
+                                                    @else
+                                                        <button class="nav-link center-button">Add to Cart
+                                                            <svg width="18" height="18">
+                                                                <use xlink:href="#cart"></use>
+                                                            </svg>
+                                                        </button>
+                                                    @endif
                                             </form>
 
                                         </div>
@@ -174,7 +157,7 @@
     </div>
 </section>
 
-
+{{--
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const qtyInput = document.querySelector('input[name="qty"]');
@@ -216,4 +199,4 @@
             }
         });
     });
-</script>
+</script> --}}

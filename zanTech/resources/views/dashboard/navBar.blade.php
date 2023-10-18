@@ -22,8 +22,8 @@
                     <div class="col-md-4 d-none d-md-block">
                     </div>
                     <div class="col-11 col-md-7">
-                        <form id="search-form" class="text-center" action="index.html" method="post">
-                            <input type="text" class="form-control border-0 bg-transparent"
+                        <form id="search-form" method="GET" action="{{ route('searchProducts') }}">
+                            <input type="text" name="search" class="form-control border-0 bg-transparent"
                                 placeholder="What are you looking for?">
                         </form>
                     </div>
@@ -55,7 +55,13 @@
                                 </a>
                             </li>
                             @php
-                                $totalWish = App\Models\WishlistItem::count();
+
+                                if (Auth::check()) {
+                                    $userId = Auth::user()->id;
+                                    $totalWish = App\Models\WishlistItem::where('user_id', $userId)->count();
+                                } else {
+                                    $totalWish = 0;
+                                }
                             @endphp
                             <li>
                                 <a href="{{ route('viewWishList') }}"
@@ -95,14 +101,15 @@
                         @endauth
                     @endif
                     <li class="d-lg-none">
-                        <a href="#" class="rounded-circle bg-light p-2 mx-1 position-relative" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                        <a href="#" class="rounded-circle bg-light p-2 mx-1 position-relative"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                             <svg width="24" height="24" viewBox="0 0 24 24">
                                 <use xlink:href="#cart"></use>
                             </svg>
                             <span
-                            class="badge bg-red text-black position-absolute top-0 start-100 translate-middle badge-rounded-circle"> {{ ShoppingCart::count() }}
-                        </span>
+                                class="badge bg-red text-black position-absolute top-0 start-100 translate-middle badge-rounded-circle">
+                                {{ ShoppingCart::count() }}
+                            </span>
                         </a>
                     </li>
                     <li class="d-lg-none">
@@ -119,9 +126,9 @@
                     <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                         @auth
-                        <span class="fs-6 text-muted dropdown-toggle">{{ Auth::user()->name }} Cart</span>
+                            <span class="fs-6 text-muted  dropdown-toggle">{{ Auth::user()->name }}'s Cart</span>
                         @else
-                        <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
+                            <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
                         @endauth
 
                         <span class="cart-total fs-5 fw-bold"><i class="fa-solid fa-bangladeshi-taka-sign"></i>
@@ -152,18 +159,12 @@
                         <div class="offcanvas-body">
                             <!-- Categories -->
                             <select class="filter-categories border-0 mb-0 me-5 fw-bold">
-                                <option>All Categories</option>
-                                <option>MicroController</option>
-                                <option>Motor Driver</option>
-                                <option>Battery</option>
-                                <option>Sensors</option>
-                                <option>Project Kits</option>
-                                <option>Tools</option>
-                                <option>Internet Of Things</option>
-                                <option>Wireless Controls</option>
-                                <option>Others</option>
+                                <option selected value="">All categories</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->catagoryName }}">{{ $category->catagoryName }}
+                                    </option>
+                                @endforeach
                             </select>
-
                             <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                                 @auth
                                     <a href="{{ url('redirect') }}" class="nav-link fw-bold">Home</a>
@@ -171,29 +172,33 @@
                                     <a href="{{ url('/') }}" class="nav-link fw-bold">Home</a>
                                 @endauth
                                 <li class="nav-item dropdown">
-                                    <a href="#men" class="nav-link fw-bold">Robotics Package</a>
+                                    <a href="{{ route('viewShop') }}" class="nav-link fw-bold">Shop</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a href="" class="nav-link fw-bold">Project</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('showCart') }}" class="nav-link fw-bold">Cart Items</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="#accessories" class="nav-link fw-bold">Popular</a>
-                                </li>
                                 @if (Route::has('login'))
                                     @auth
                                         <li class="nav-item">
-                                            <a href="#brand" class="nav-link fw-bold">Track Order</a>
+                                            <a href="{{ route('trackOrder') }}" class="nav-link fw-bold">Track Order</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('seeFeedback') }}" class="nav-link fw-bold">View
+                                                feedback</a>
                                         </li>
                                     @endauth
                                 @endif
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="#brand" class="nav-link fw-bold">Tutorial</a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a href="{{ route('loadStaticPages') }}" class="nav-link fw-bold">About us</a>
                                 </li>
                                 <li class="nav-item fw-bold">
-                                    <a href="{{ route('loadStaticPages') }}" class="nav-link">Contact</a>
+                                    <a href="{{ route('ContactPage') }}" class="nav-link">Contact</a>
                                 </li>
                             </ul>
 

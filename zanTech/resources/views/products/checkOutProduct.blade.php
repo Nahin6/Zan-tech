@@ -30,6 +30,11 @@
                     @error('division')
                         <div class="text-red fw-bold">{{ $message }}</div>
                     @enderror
+                    <label for="city">Town / City *</label>
+                    <input type="text" id="adr" name="city" class="form-control mt-3 ps-3 mb-4">
+                    @error('city')
+                        <div class="text-red ">{{ $message }}</div>
+                    @enderror
                     <label for="address">Street Address*</label>
                     <input type="text" id="adr" name="streetAddress" placeholder="Road number & block"
                         class="form-control">
@@ -42,11 +47,7 @@
                     @error('homeAddress')
                         <div class="text-red ">{{ $message }}</div>
                     @enderror
-                    <label for="city">Town / City *</label>
-                    <input type="text" id="adr" name="city" class="form-control mt-3 ps-3 mb-4">
-                    @error('city')
-                        <div class="text-red ">{{ $message }}</div>
-                    @enderror
+
                 </div>
             </div>
             <div class="col-lg-6">

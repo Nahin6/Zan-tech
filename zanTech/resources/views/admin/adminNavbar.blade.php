@@ -17,26 +17,29 @@
 <body>
     <!-- Side-Nav -->
     <div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
-        <ul class="nav flex-column text-white w-100">
+        <ul class="nav flex-column text-white w-100 fw-bold mt-2">
             <a href="{{url('redirect')   }}" class="nav-link h3 text-white my-2">
                 ZAN </br>Tech
             </a>
-            <li class="nav-item">
+            <li class="nav-item mt-2">
                 <a class="nav-link" href="{{ route('addCatagoryPage') }}">Add Catagory</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mt-2">
                 <a class="nav-link" href="{{ route('addProductPage') }}">Add Product</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mt-2">
                 <a class="nav-link" href="{{ route('ViewProductList') }}">Product List</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Order List</a>
+            <li class="nav-item mt-2">
+                <a class="nav-link" href="{{ route('OrderList')  }}">Order List</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mt-2">
                 <a class="nav-link" href="{{ route('userInformation') }}">User Details</a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item mt-2">
+                <a class="nav-link" href="{{ route('customerQueries') }}">Customer Complains</a>
+            </li>
+            <li class="nav-item  mt-2">
                 <a class="nav-link" href="{{ route('userLogout') }}">Logout</a>
             </li>
         </ul>

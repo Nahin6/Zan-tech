@@ -7,7 +7,7 @@
         <p>{{ $message }}</p>
     </div>
 @endif
-<div class="container m-3">
+<div class="container ms-lg-5-5">
     <h1 class="text-center">Product List</h1>
     {{-- <div class="m-3">
         <p class="text-center">Product Search</p>
@@ -70,7 +70,7 @@
                         <th>{{ $product->id }}</th>
                         <td>{{ $product->catagoryName }}</td>
                         <td><a type="button" href="{{ route('deleteCategory', $product->id) }}"
-                                class="btn btn-primary btn-sm btn-danger">Delete</a></td>
+                            onClick="return confirm('Are you sure')"      class="btn btn-primary btn-sm btn-danger">Delete</a></td>
                     </tr>
                 @endforeach
             </tbody>

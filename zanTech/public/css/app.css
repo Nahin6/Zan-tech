@@ -559,7 +559,7 @@ h1,h2,h3,h4,h5,h6 {
 .product-item {
   position: relative;
   padding: 16px;
-  background: #eae4e4;
+  background: rgba(251, 245, 245, 0.934);
   border: 1px solid #FBFBFB;
   box-shadow: 0px 5px 22px rgba(0, 0, 0, 0.04);
   border-radius: 16px;
@@ -755,6 +755,27 @@ h1,h2,h3,h4,h5,h6 {
     color: red;
 }
 #adr{
-    border-color: rgba(0, 0, 0, 0.114);
+    border-color: rgba(0, 0, 0, 0.059);
     resize: none;
+}
+.center-button
+{
+    display: block; margin: 0 auto;
+
+}
+
+
+.input-container {
+    position: relative;
+}
+
+#password {
+    padding-right: 40px; /* Adjust the padding to position the icon at the bottom */
+}
+
+.show-password-icon {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    cursor: pointer;
 }

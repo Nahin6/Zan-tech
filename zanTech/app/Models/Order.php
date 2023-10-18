@@ -21,7 +21,12 @@ class Order extends Model
         'deliveryCharge',
         'customerPhone',
         'customerEmail',
+        'randInvoice',
         'orderStatus',
     ];
+    public function items()
+{
+    return $this->hasMany(OrderItems::class, 'orderId', 'id');
+}
 }
 
