@@ -2,7 +2,7 @@
 
 :root {
   --primary: #0000ff;
-  --secondary: #3d3d3d; 
+  --secondary: #3d3d3d;
   --white: #fff;
 }
 
@@ -108,7 +108,7 @@ body{
 .invoice_wrapper .body .main_table .table_header .row{
 	color: var(--white);
 	font-size: 18px;
-	border-bottom: 0px;	
+	border-bottom: 0px;
 }
 
 .invoice_wrapper .body .main_table .row{
@@ -182,3 +182,5 @@ body{
 .mt-top{
     margin-top: 10px;
 }
+
+

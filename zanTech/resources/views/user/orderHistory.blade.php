@@ -1,7 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
-@include('sweetalert::alert')
+@extends('dashboard.dashboard')
+
+@section('content')
 
 
 @if ($orderItems->isEmpty())
@@ -22,7 +21,7 @@
                 <th scope="col">Quantity</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Delivery Charge</th>
-                <th scope="col">Order Status</th>
+                <th scope="col">Track Order</th>
                 <th scope="col">Download Invoice</th>
             </tr>
         </thead>
@@ -43,15 +42,30 @@
                 <tr>
                     <td>{{ $item->productName }}</td>
                     <td>{{ $item->productQuantity }}</td>
-                    <td>{{ $item->productPrice }}</td>
-                    <td>{{ $charge }}</td>
-                    <td>{{ $item->orderStatus }}</td>
+
+                    <td>
+                        @if ($loop->first || $item->orderId != $orderItems[$loop->index - 1]->orderId)
+                        {{ $item->totalBill }}
+                        @endif
+                    </td>
+                    <td>
+                          @if ($loop->first || $item->orderId != $orderItems[$loop->index - 1]->orderId)
+                        {{ $charge }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($loop->first || $item->orderId != $orderItems[$loop->index - 1]->orderId)
+                        <a href="{{ route('trackOrders', $item->id) }}" type="button"
+                        class="btn btn-dark fw-bold rounded-pill">Track order</a>
+                        @endif
+                    </td>
                     <td>
                         @if ($loop->first || $item->orderId != $orderItems[$loop->index - 1]->orderId)
                         <a href="{{ route('downloadPdf', $item->id) }}" type="button"
                         class="btn btn-dark fw-bold rounded-pill">Download</a>
                         @endif
                     </td>
+
                 </tr>
 
                 @if ($loop->last || $item->orderId != $orderItems[$loop->index + 1]->orderId)
@@ -65,7 +79,7 @@
         </tbody>
     </table>
 @endif
-@include('dashboard.footer')
+@endsection
     {{-- <tbody>
         @foreach ($orderItems as $item)
             @php

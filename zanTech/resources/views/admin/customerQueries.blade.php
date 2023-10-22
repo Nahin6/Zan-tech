@@ -1,5 +1,6 @@
-@include('admin.adminLinks')
-@include('admin.adminNavbar')
+@extends('admin.adminDashboard')
+
+@section('content')
 @include('sweetalert::alert')
 
 @if ($message = Session::get('success'))
@@ -60,3 +61,4 @@
 
     </div>
 </div>
+@endsection

@@ -1,6 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
+@extends('dashboard.dashboard')
+
+@section('content')
 @include('sweetalert::alert')
 
 @if ($cusQuery->isEmpty())
@@ -9,7 +9,7 @@
         <div class=" text-center">
             <h1 class="page-title pb-2 ">No feedack</h1>
         </div>
-        <h2 class="page-title pb-2 text-center">Your complain box is empty</h2>
+        <h2 class="page-title pb-2 text-center">Your Query box is empty</h2>
     </div>
 </section>
 @else
@@ -46,4 +46,4 @@
         </tbody>
     </table>
 @endif
-@include('dashboard.footer')
+@endsection

@@ -57,7 +57,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
     {{-- <link rel="stylesheet" href="template/assets/css/LoginSignUp/LoginSignUp.css"> --}}
-    <link rel="stylesheet" href="css/LoginSignUp/LoginSignUp.css">
+    <link rel="stylesheet" href="{{ asset('css/LoginSignUp/LoginSignUp.css') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('images\logo\favicon\zan-tech-favicon.png') }}">
     <link rel="stylesheet"
         href="css/LoginSignUp/fonts/material-icon/css/material-design-iconic-font.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -70,10 +71,10 @@
 
         <section class="sign-in">
             <div class="container">
-           
+
                 <div class="error-message" id="error-message"></div>
 
-             
+
                 <div class="signin-content">
 
                     <div class="signin-image">

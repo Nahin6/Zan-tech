@@ -1,5 +1,6 @@
-@include('admin.adminLinks')
-@include('admin.adminNavbar')
+@extends('admin.adminDashboard')
+
+@section('content')
 {{-- <div class=" p-1 my-container active-cont"> --}}
 
 @if ($message = Session::get('success'))
@@ -61,6 +62,8 @@
 
                     <th scope="col">Category ID</th>
                     <th scope="col">Category Name</th>
+                    <th scope="col">Edit Category Name</th>
+                    <th scope="col">Delete Category</th>
 
                 </tr>
             </thead>
@@ -69,6 +72,8 @@
                     <tr>
                         <th>{{ $product->id }}</th>
                         <td>{{ $product->catagoryName }}</td>
+                        <td><a type="button" href="{{ route('editCategory', $product->id) }}"
+                               class="btn btn-primary btn-sm btn-danger">Edit</a></td>
                         <td><a type="button" href="{{ route('deleteCategory', $product->id) }}"
                             onClick="return confirm('Are you sure')"      class="btn btn-primary btn-sm btn-danger">Delete</a></td>
                     </tr>
@@ -77,3 +82,4 @@
         </table>
     </div>
 </div>
+@endsection

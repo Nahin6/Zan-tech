@@ -6,10 +6,14 @@ use App\Models\CustomerQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\OrderItems;
 use App;
+use App\Models\Cupons;
+use App\Models\Order;
+use App\Models\Product;
 
 class CustomerController extends Controller
 {
@@ -28,6 +32,8 @@ class CustomerController extends Controller
                     'orders.customerHomeAdress',
                     'orders.customerPhone',
                     'orders.customerEmail',
+                    'orders.totalBill',
+                    'orders.randInvoice',
                     'order_items.orderId',
                     'order_items.productName',
                     'order_items.productQuantity',
@@ -35,6 +41,7 @@ class CustomerController extends Controller
                     'orders.deliveryCharge',
                     'orders.orderStatus'
                 )->where('customerId', Auth::user()->id)
+                ->orderBy('orders.id', 'desc')
                 ->get();
             return view('user.orderHistory', compact('orderItems'));
         } else {
@@ -95,21 +102,25 @@ class CustomerController extends Controller
                     'orders.deliveryCharge',
                     'orders.orderStatus',
                     'orders.randInvoice',
+                    'orders.customerPromoCode',
                     'orders.created_at',
+                    'order_items.id',
                     'order_items.productName',
                     'order_items.productQuantity',
                     'order_items.productPrice',
+                    'order_items.singleProductPrice',
+                    'cupons.discount as customerPromoDiscount'
                 )
+                ->leftJoin('cupons', 'orders.customerPromoCode', '=', 'cupons.promo_code')
                 ->where('orders.id', $id)
                 ->get();
 
             if (!$orderInvoice) {
                 return redirect()->back()->with('error', 'Order not found.');
             }
-
-            // $pdf = PDF::loadView('user.downloadInvoice', compact('orderInvoice'));
+            // $pdf = pdf::loadView('user.downloadInvoice', compact('orderInvoice'));
+            // return $pdf->download('orderInvoice.pdf');
             return View('user.downloadInvoice', compact('orderInvoice'));
-            // return $pdf->download('order-invoice.pdf');
         } else {
             return view('auth.login');
         }
@@ -188,6 +199,47 @@ class CustomerController extends Controller
             $cusQuery->delete();
             Alert::info('Successfull', 'Complain removed');
             return redirect()->back();
+        } else {
+            return view('auth.login');
+        }
+    }
+
+    public function filterCategoriesWiseProduct($category)
+    {
+        $products = Product::where('catagory', $category)->get();
+
+        return view('products.productShop', compact('products'));
+    }
+
+    public function filterProductByPrice($minPrice, $maxPrice)
+    {
+        $products = Product::whereBetween('productPrice', [$minPrice, $maxPrice])->get();
+        return view('products.productShop', compact('products'));
+    }
+    public function showStaticPage($slug)
+    {
+
+        return view("dashboard.pages.$slug");
+    }
+    public function trackOrderStatus($id)
+    {
+        if (Auth::check() && Auth::user()->userType === '0') {
+            $trackStatus = DB::table('orders')
+                ->join('order_items', 'orders.id', '=', 'order_items.orderId')
+                ->select(
+                    'orders.id',
+                    'orders.orderStatus',
+                    'orders.randInvoice',
+                )
+                ->where('orders.id', $id)
+                ->get();
+
+
+            if (!$trackStatus) {
+                return redirect()->back()->with('error', 'Order not found.');
+            }
+
+            return view("user.trackOrder", compact('trackStatus'));
         } else {
             return view('auth.login');
         }

@@ -1,7 +1,9 @@
-@include('admin.adminLinks')
-@include('admin.adminNavbar')
+{{-- @include('admin.adminLinks')
+@include('admin.adminNavbar') --}}
 
+@extends('admin.adminDashboard')
 
+@section('content')
 @if ($message = Session::get('success'))
     <div id="success-message" class="alert alert-success">
         <p>{{ $message }}</p>
@@ -97,3 +99,4 @@
     </form>
 </div>
 {{-- </div> --}}
+@endsection

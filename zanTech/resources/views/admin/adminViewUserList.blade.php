@@ -1,6 +1,6 @@
-@include('admin.adminLinks')
-@include('admin.adminNavbar')
-{{-- <div class=" p-1 my-container active-cont"> --}}
+@extends('admin.adminDashboard')
+
+@section('content')
 
 @if ($message = Session::get('success'))
     <div id="success-message" class="alert alert-success">
@@ -38,3 +38,4 @@
         </table>
     </div>
 </div>
+@endsection

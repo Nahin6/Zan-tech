@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cupons;
 use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\Product;
@@ -18,22 +19,29 @@ class productController extends Controller
 
     public function showProductsInPriceRange()
     {
-        $products = Product::all();
-        // -------------------------------------------
-        $latestProducts = Product::latest()->take(10)->get();
-        // -------------------------------------------
+          //------- all product withour projects
+        $products = Product::where('catagory','!=', 'Project')->orderBy('id','desc')->get();
+        // -----last 10 uploaded products
+        $latestProducts = Product::where('catagory','!=', 'Project')->latest()->take(10)->get();
+        // --------most ordered products
         $trendingProductCounts = DB::table('order_items')
             ->select('productName', DB::raw('COUNT(*) as order_count'))
             ->groupBy('productName')
             ->orderBy('order_count', 'desc')
             ->limit(15)
             ->pluck('productName');
+            $trendingProductCounts = $trendingProductCounts->toArray();
+
         $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
-        ->get();
+        ->get()
+        ->sortBy(function ($product) use ($trendingProductCounts) {
+            return array_search($product->productName, $trendingProductCounts);
+        });
+        return view('dashboard.bodyContents', compact('latestProducts', 'products', 'trendingProducts'));
 
-
-        return view('dashboard.dashboard', compact('latestProducts', 'products', 'trendingProducts'));
     }
+
+
     public function viewProductDetailInformation($id, Request $request)
     {
         $productDetails = Product::find($id);
@@ -55,8 +63,7 @@ class productController extends Controller
                         'product_id' => $id,
                     ]
                 );
-                // Alert::error('Error', 'Please Login to add product to wish list');
-                // return view('products.wishListProducts');
+
                 return redirect()->back()->with('success', 'Product added to your wish list.');
             }
         } else {
@@ -64,6 +71,8 @@ class productController extends Controller
             Alert::error('Error', 'Please Login to add product to wish list');
         }
     }
+
+
     public function viewWishList()
     {
 
@@ -87,6 +96,8 @@ class productController extends Controller
         $totalWish = WishlistItem::count($id);
         return view('dashboard.navBar', compact('totalWish'));
     }
+
+
     public function removeWisListhPrduct($id)
     {
 
@@ -114,8 +125,8 @@ class productController extends Controller
                 'productImg' => $this->cartProduct->productImg
             ]
         );
+        return view('products.cartProductPage');
         Alert::success('Added!!', 'Product added to cart');
-        return redirect()->back();
     }
 
     public function DisplayCartPrduct()
@@ -125,6 +136,8 @@ class productController extends Controller
         $productQuantities = Product::all();
         return view('products.cartProductPage', compact('showCart', 'productQuantities'));
     }
+
+
     public function removeFromCart($id)
     {
 
@@ -151,21 +164,6 @@ class productController extends Controller
         }
     }
 
-    // function generateRandomInvoiceNumber($length = 8)
-    // {
-    //     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    //     $invoiceNumber = '';
-
-    //     for ($i = 0; $i < $length; $i++) {
-    //         $invoiceNumber .= $characters[rand(0, strlen($characters) - 1)];
-    //     }
-
-
-    //     $invoiceNumber = generateRandomInvoiceNumber();
-    //     return $invoiceNumber;
-    // }
-
-
 
     public function CustomerPlaceOrder($id, Request $request)
     {
@@ -184,7 +182,7 @@ class productController extends Controller
                 $invoiceNumber .= $characters[rand(0, strlen($characters) - 1)];
             }
             $invoiceNumber;
-
+            $userPromoCode = $request->input('promoCode');
             $division = $request->input('deliveryCharge');
             $totalBill = $request->input('totalBill');
 
@@ -198,8 +196,15 @@ class productController extends Controller
             if ($division === 'outsideDhaka') {
                 $deliveryCharge = 120;
             }
+            $totalAfterDeliverBill = $totalBill + $deliveryCharge;
+            $promo = Cupons::where('promo_code', $userPromoCode)->first();
 
-            $finalTotalBill = $totalBill + $deliveryCharge;
+            // Calculate the discount amount based on the promo code
+            $discount = 0;
+            if ($promo) {
+                $discount = ($totalAfterDeliverBill / 100) * $promo->discount;
+            }
+            $finalTotalBill = $totalAfterDeliverBill;
 
             $order =  Order::create([
                 'customerId' => Auth::user()->id,
@@ -210,7 +215,7 @@ class productController extends Controller
                 'customerHomeAdress' => $request->input('homeAddress'),
                 'customerCity' => $request->input('city'),
                 'customerAditonalNotes' => $request->input('addtionalInfo'),
-                'customerPromoCode' => $request->input('promoCode'),
+                'customerPromoCode' =>  $userPromoCode,
                 'deliveryCharge' => $request->input('deliveryCharge'),
                 'customerPhone' => Auth::user()->phone,
                 'customerEmail' => Auth::user()->email,
@@ -233,6 +238,7 @@ class productController extends Controller
                 OrderItems::create([
                     'productName' => $cartItem->name,
                     'productPrice' => $totalPrice,
+                    'singleProductPrice' => $cartItem->price,
                     'productQuantity' => $cartItem->qty,
                     'orderId' => $order->id,
                 ]);
@@ -249,5 +255,10 @@ class productController extends Controller
     public function viewAllShop()
     {
         return view('products.productShop');
+    }
+    public function displayAllProject()
+    {
+        $projects = Product::where('catagory', 'Project')->get();
+        return view('products.projectsPage', compact('projects'));
     }
 }

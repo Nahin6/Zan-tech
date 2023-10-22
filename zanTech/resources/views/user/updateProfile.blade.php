@@ -1,7 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
-@include('sweetalert::alert')
+@extends('dashboard.dashboard')
+
+@section('content')
 <div class="d-flex justify-content-center align-items-center m-3">
     <div class="">
         <h4>Profile Information</h4>
@@ -64,7 +63,7 @@
 </div>
 
 
-@include('dashboard.footer')
+@endsection
 
 <script>
     function togglePasswordVisibility(passwordInputId, showPasswordIconId) {

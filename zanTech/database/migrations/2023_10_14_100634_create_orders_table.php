@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('customerCity');
             $table->string('customerAditonalNotes')->nullable();
             $table->string('customerPromoCode')->nullable();
+            $table->float('customerPromoDiscount')->nullable();
             $table->string('customerPhone');
             $table->string('customerEmail');
             $table->string('randInvoice')->unique();

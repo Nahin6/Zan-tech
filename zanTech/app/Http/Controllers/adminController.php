@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use App\Events\ProductDeleted;
+use App\Models\Cupons;
+
 class adminController extends Controller
 {
 
@@ -96,7 +98,7 @@ class adminController extends Controller
     public function ViewProductList()
     {
         if (Auth::check() && Auth::user()->userType === 'Admin') {
-            $product = Product::all();
+            $product = Product::where('catagory','!=', 'Project')->get();
             $category = Catagory::all();
 
             return view('admin.producList', compact('product','category'));
@@ -141,6 +143,7 @@ class adminController extends Controller
 
 
 
+
     public function updateProduct($id, Request $request)
     {
         if (Auth::check()&& Auth::user()->userType === 'Admin') {
@@ -182,6 +185,76 @@ class adminController extends Controller
         }
     }
 
+    public function editCategory($id, Request $request)
+
+    {
+        if (Auth::check() && Auth::user()->userType === 'Admin') {
+            $editCategory = Catagory::find($id);
+            return View('admin.editCategory', compact('editCategory'));
+
+        } else {
+            return view('auth.login');
+        }
+    }
+    public function editPromoCode($id, Request $request)
+
+    {
+        if (Auth::check() && Auth::user()->userType === 'Admin') {
+            $promos = Cupons::find($id);
+            return View('admin.editPromoCodes', compact('promos'));
+
+        } else {
+            return view('auth.login');
+        }
+    }
+    public function updateCategoryName($id, Request $request)
+    {
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+            $request->validate([
+                'catagoryName' => 'required',
+
+            ]);
+
+            $editProduct = Catagory::find($id);
+
+            if (!$editProduct) {
+                return redirect()->back()->with('error', 'Product not found');
+            }
+
+            $editProduct->catagoryName = $request->input('catagoryName');
+
+            $editProduct->save();
+            Alert::success('Successfull', 'Category Name Updated Successfully');
+            return redirect()->back();
+        } else {
+            return view('auth.login');
+        }
+    }
+    public function updatePromoCodes($id, Request $request)
+    {
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+            $request->validate([
+                'promoName' => 'required',
+                'promoDiscount' => 'required',
+
+            ]);
+
+            $promos = Cupons::find($id);
+
+            if (!$promos) {
+                return redirect()->back()->with('error', 'Promo code not found');
+            }
+
+            $promos->promo_code = $request->input('promoName');
+            $promos->discount = $request->input('promoDiscount');
+            $promos->save();
+            Alert::success('Successfull', 'Promos Updated Successfully');
+            return redirect()->back();
+        } else {
+            return view('auth.login');
+        }
+    }
+
     public function viewUserInfo()
     {
         if (Auth::check()&& Auth::user()->userType === 'Admin') {
@@ -211,6 +284,17 @@ class adminController extends Controller
             return redirect()->back()->with('success', 'Category deleted successfully');
         }
     }
+    public function deletePromoCodes($id)
+    {
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+
+            $category = Cupons::find($id);
+
+            $category->delete();
+
+            return redirect()->back()->with('success', 'Promo Code deleted successfully');
+        }
+    }
 
     public function searchProducts(Request $request)
     {
@@ -221,15 +305,7 @@ class adminController extends Controller
         return view('products.productShop', compact('products'));
     }
 
-    public function showMultipleViews(){
-            return view('dashboard.aboutUs');
 
-    }
-    public function ContactAdmin(){
-
-            return view('dashboard.contactPage');
-            // return $this->showMultipleViews('dashboard.contactPage');
-    }
     public function OrderListView(){
         if (Auth::check()&& Auth::user()->userType === 'Admin') {
 
@@ -277,18 +353,51 @@ class adminController extends Controller
         return $this->UpdateStatus($id, "Processing");
     }
     public function UpdateOrderToNotAvailable($id){
-        return $this->UpdateStatus($id, "Sorry Product not available right now!");
+        return $this->UpdateStatus($id, "not available");
 
     }
     public function UpdateOrderToPending($id){
         return $this->UpdateStatus($id, "Pending");
-
+    }
+    public function OutForDeliveryFunction($id){
+        return $this->UpdateStatus($id, "Out for delivery");
     }
     public function deleteOrder($id){
         if (Auth::check()&& Auth::user()->userType === 'Admin') {
             $updateOrder = Order::find($id);
             $updateOrder->delete();
             return back();
+        }
+        else{
+            return view('auth.login');
+        }
+    }
+    public function addPromoCodess(){
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+
+            $promoCodes = Cupons::all();
+
+           return view('admin.addCupons', compact('promoCodes'));
+        }
+        else{
+            return view('auth.login');
+        }
+    }
+    public function addNewPromoCodes(Request $request){
+        if (Auth::check()&& Auth::user()->userType === 'Admin') {
+            $request->validate([
+                'promoName' => 'required',
+                'promoDiscount' => 'required',
+
+            ]);
+            Cupons::create(
+                [
+                    'promo_code' => $request->input('promoName'),
+                    'discount' => $request->input('promoDiscount')
+                ]
+            );
+            Alert::success('Successfull', 'Promo code Added Successfully');
+            return redirect()->back();
         }
         else{
             return view('auth.login');

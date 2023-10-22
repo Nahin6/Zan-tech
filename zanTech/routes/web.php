@@ -18,7 +18,9 @@ use App\Http\Controllers\productController;
 */
 
 Route::get('/', function () {
-    return view('dashboard.dashboard');
+
+    // return view('dashboard.contactPage');
+    // return view('dashboard.dashboard');
 
 });
 
@@ -39,11 +41,19 @@ Route::controller(authController::class)->group(function () {
 Route::controller(adminController::class)->group(function () {
 
 Route::get('/add-products','addProductPage')->name('addProductPage')->middleware();
+
+Route::get('/add-promo','addPromoCodess')->name('addPromoCode')->middleware();
+Route::post('/add-new-promo','addNewPromoCodes')->name('addNewPromoCodes')->middleware();
+Route::get('/edit-promos/{id}','editPromoCode')->name('editPromoCode')->middleware();
+Route::post('/update-promo/{id}','updatePromoCodes')->name('updatePromoCodes')->middleware();
+Route::get('/delete-promo/{id}','deletePromoCodes')->name('deletePromoCode')->middleware();
 Route::post('/add-new-products','addNewProduct')->name('addProducts')->middleware();
 Route::get('/view-products','ViewProductList')->name('ViewProductList')->middleware();
 Route::get('/delete-products/{id}','DeleteProduct')->name('deleteProduct')->middleware();
 Route::get('/edit-products/{id}','editProduct')->name('editProduct')->middleware();
 Route::post('/update-products/{id}','updateProduct')->name('updateProducts')->middleware();
+Route::get('/edit-Category/{id}','editCategory')->name('editCategory')->middleware();
+Route::post('/update-category/{id}','updateCategoryName')->name('updateCategory')->middleware();
 Route::get('/view-user-details','viewUserInfo')->name('userInformation')->middleware();
 Route::get('/delete-user/{id}','deleteUserInfo')->name('deleteUser')->middleware();
 Route::get('/delete/{id}','deleteCategory')->name('deleteCategory')->middleware();
@@ -53,11 +63,10 @@ Route::post('/add-new-catagory', 'addNewCatagory')->name('addNewCatagory')->midd
 Route::get('/order-list', 'OrderListView')->name('OrderList')->middleware();
 Route::get('/order-update/{id}', 'UpdateOrderToProcess')->name('UpdateOrderToProcess')->middleware();
 Route::get('/order-updates/{id}', 'UpdateOrderToDelivered')->name('UpdateOrderToDelivered')->middleware();
+Route::get('/order-out/{id}', 'OutForDeliveryFunction')->name('OutForDelivery')->middleware();
 Route::get('/order-updatess/{id}', 'UpdateOrderToNotAvailable')->name('UpdateOrderToNotAvailable')->middleware();
 Route::get('/order-updatesss/{id}', 'UpdateOrderToPending')->name('UpdateOrderToPending')->middleware();
 Route::get('/delete-updatess/{id}', 'deleteOrder')->name('deleteOrder')->middleware();
-Route::get('/static', 'showMultipleViews')->name('loadStaticPages')->middleware();
-Route::get('/contact-page', 'ContactAdmin')->name('ContactPage')->middleware();
 
 });
 
@@ -76,6 +85,7 @@ Route::controller(productController::class)->group(function () {
     Route::get('/checkout-cart', 'checkOutCartPage')->name('checkOutCart');
     Route::post('/checkout-order/{id}', 'CustomerPlaceOrder')->name('placeOrder');
     Route::get('/shop', 'viewAllShop')->name('viewShop');
+    Route::get('/projects', 'displayAllProject')->name('displayProject');
 
 });
 
@@ -83,11 +93,16 @@ Route::controller(CustomerController::class)->group(function(){
 
  Route::get('/track-order-page', 'trackOrderPage')->name('trackOrder');
  Route::get('/download-order-page/{id}', 'downloadOrderToPdf')->name('downloadPdf');
+ Route::get('/view-orders/{id}', 'trackOrderStatus')->name('trackOrders');
  Route::post('/customer-query-page', 'storeCustomerQuery')->name('submitCusQuery');
  Route::get('/customer-query-pages', 'viewcustomerQueries')->name('customerQueries');
  Route::get('/customer-seeFeedback-pages', 'ViewFeedback')->name('seeFeedback');
  Route::post('/customer-sol-page/{id}', 'submitSolutionToQuery')->name('submitSolToQuery');
  Route::get('/remove-query/{id}', 'deleteCustomerQuery')->name('deleteQuery');
+ Route::get('/find-product/{category}', 'filterCategoriesWiseProduct')->name('filterCategories');
+ Route::get('/price-wise-product/{minPrice}/{maxPrice}', 'filterProductByPrice')->name('filterProductsByPriceRange');
+ Route::get('/page/{slug}', 'showStaticPage')->name('static-page');
+
 });
 
 Route::middleware([

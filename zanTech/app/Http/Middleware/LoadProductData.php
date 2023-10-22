@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use ShoppingCart;
+
 class LoadProductData
 {
     /**
@@ -19,21 +20,25 @@ class LoadProductData
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $products = Product::all();
+        $products = Product::where('catagory', '!=', 'Project')->orderBy('id','desc')->get();
         // $bestProducts = Product::whereBetween('productPrice', [0, 200])->get();
-        $latestProducts = Product::latest()->take(10)->get();
-        $showCart= ShoppingCart::all();
-        $categories= Catagory::all();
+        $latestProducts = Product::where('catagory', '!=', 'Project')->latest()->take(10)->get();
+        $showCart = ShoppingCart::all();
+        $categories = Catagory::where('catagoryName','!=', 'Project')->get();
 
-       $trendingProductCounts = DB::table('order_items')
+        $trendingProductCounts = DB::table('order_items')
             ->select('productName', DB::raw('COUNT(*) as order_count'))
             ->groupBy('productName')
             ->orderBy('order_count', 'asc')
             ->limit(15)
             ->pluck('productName');
-        $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
-        ->get();
+        $trendingProductCounts = $trendingProductCounts->toArray();
 
+        $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
+            ->get()
+            ->sortBy(function ($product) use ($trendingProductCounts) {
+                return array_search($product->productName, $trendingProductCounts);
+            });
 
 
         View::share('products', $products);

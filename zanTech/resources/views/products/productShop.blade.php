@@ -1,18 +1,11 @@
-@include('dashboard.links')
+{{-- @include('dashboard.links')
 @include('dashboard.topNav')
-@include('dashboard.navBar')
+@include('dashboard.navBar') --}}
 
+@extends('dashboard.dashboard')
 
-
-{{-- <section class="py-5 mb-5" style="background: url(images/Banner/background-pattern.png);">
-    <div class="container-fluid">
-        <div class=" text-center">
-            <h1 class="page-title pb-2 ">Shop</h1>
-        </div>
-        <h2 class="page-title pb-2 text-center">Find your desire product</h2>
-    </div>
-</section> --}}
-
+@section('content')
+@if ($products->isEmpty())
 <div class="shopify-grid">
     <div class="container-fluid">
         <div class="row g-5">
@@ -23,68 +16,123 @@
                     <div class="widget-product-categories pt-5">
                         <h5 class="widget-title">Categories</h5>
                         <ul class="product-categories sidebar-list list-unstyled">
+                            @foreach ($categories as $category)
                             <li class="cat-item">
-                                <a href="/collections/categories">All</a>
+                                <a href="{{ route('filterCategories',['category' => $category->catagoryName]) }}" class="nav-link">{{ $category->catagoryName }}</a>
                             </li>
-                            <li class="cat-item">
-                                <a href="#" class="nav-link">Phones</a>
-                            </li>
-                            <li class="cat-item">
-                                <a href="#" class="nav-link">Accessories</a>
-                            </li>
-                            <li class="cat-item">
-                                <a href="#" class="nav-link">Tablets</a>
-                            </li>
-                            <li class="cat-item">
-                                <a href="#" class="nav-link">Watches</a>
-                            </li>
+                        @endforeach
                         </ul>
                     </div>
                     <div class="widget-price-filter pt-3">
                         <h5 class="widget-titlewidget-title">Filter By Price</h5>
                         <ul class="product-tags sidebar-list list-unstyled">
                             <li class="tags-item">
-                                <a href="#" class="nav-link">Less than $10</a>
+                                <a href="{{ route('filterProductsByPriceRange', [0, 200]) }}" class="nav-link">0-200</a>
+
                             </li>
                             <li class="tags-item">
-                                <a href="#" class="nav-link">$10- $20</a>
+                                <a href="{{ route('filterProductsByPriceRange', [201, 400]) }}" class="nav-link">200-400</a>
                             </li>
                             <li class="tags-item">
-                                <a href="#" class="nav-link">$20- $30</a>
+                               <a href="{{ route('filterProductsByPriceRange', [401, 600]) }}" class="nav-link">400-600</a>
                             </li>
                             <li class="tags-item">
-                                <a href="#" class="nav-link">$30- $40</a>
+                              <a href="{{ route('filterProductsByPriceRange', [601, 800]) }}" class="nav-link">600-800</a>
                             </li>
                             <li class="tags-item">
-                                <a href="#" class="nav-link">$40- $50</a>
+                               <a href="{{ route('filterProductsByPriceRange', [801, 1000]) }}" class="nav-link">800-1000</a>
+                            </li>
+                            <li class="tags-item">
+                               <a href="{{ route('filterProductsByPriceRange', [1001, 1500]) }}" class="nav-link">1000-1500</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </aside>
-
             <main class="col-md-10">
-                {{-- <div class="filter-shop d-flex justify-content-between">
-                    <div class="showing-product">
-                        <p>Showing 1–9 of 55 results</p>
+                <section class="py-5">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="bootstrap-tabs product-tabs">
+                                    <div class="tabs-header d-flex justify-content-between border-bottom my-5">
+                                        @include('sweetalert::alert')
+                                        @if ($message = Session::get('success'))
+                                            <div id="success-message" class="alert alert-success">
+                                                <p>{{ $message }}</p>
+                                            </div>
+                                        @endif
+                                        <nav>
+                                        </nav>
+                                    </div>
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-all" role="tabpanel"
+                                            aria-labelledby="nav-all-tab">
+
+
+                                      <h2 class="text-center">Product Not found</h2>
+                                        </div>
+                                        <!-- / product-grid -->
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="sort-by">
-                        <select id="input-sort" class="form-control" data-filter-sort="" data-filter-order="">
-                            <option value="">Default sorting</option>
-                            <option value="">Name (A - Z)</option>
-                            <option value="">Name (Z - A)</option>
-                            <option value="">Price (Low-High)</option>
-                            <option value="">Price (High-Low)</option>
-                            <option value="">Rating (Highest)</option>
-                            <option value="">Rating (Lowest)</option>
-                            <option value="">Model (A - Z)</option>
-                            <option value="">Model (Z - A)</option>
-                        </select>
+        </div>
+        </section>
+        </main>
+    </div>
+</div>
+</div>
+
+@else
+<div class="shopify-grid">
+    <div class="container-fluid">
+        <div class="row g-5">
+            <aside class="col-md-2">
+                <div class="sidebar">
+                    <div class="widget-menu">
                     </div>
-                </div> --}}
+                    <div class="widget-product-categories pt-5">
+                        <h5 class="widget-title">Categories</h5>
+                        <ul class="product-categories sidebar-list list-unstyled">
+                            @foreach ($categories as $category)
+                            <li class="cat-item">
+                                <a href="{{ route('filterCategories',['category' => $category->catagoryName]) }}" class="nav-link">{{ $category->catagoryName }}</a>
+                            </li>
+                        @endforeach
+                        </ul>
+                    </div>
+                    <div class="widget-price-filter pt-3">
+                        <h5 class="widget-titlewidget-title">Filter By Price</h5>
+                        <ul class="product-tags sidebar-list list-unstyled">
+                            <li class="tags-item">
+                                <a href="{{ route('filterProductsByPriceRange', [0, 200]) }}" class="nav-link">0-200</a>
 
-
-
+                            </li>
+                            <li class="tags-item">
+                                <a href="{{ route('filterProductsByPriceRange', [201, 400]) }}" class="nav-link">200-400</a>
+                            </li>
+                            <li class="tags-item">
+                               <a href="{{ route('filterProductsByPriceRange', [401, 600]) }}" class="nav-link">400-600</a>
+                            </li>
+                            <li class="tags-item">
+                              <a href="{{ route('filterProductsByPriceRange', [601, 800]) }}" class="nav-link">600-800</a>
+                            </li>
+                            <li class="tags-item">
+                               <a href="{{ route('filterProductsByPriceRange', [801, 1000]) }}" class="nav-link">800-1000</a>
+                            </li>
+                            <li class="tags-item">
+                               <a href="{{ route('filterProductsByPriceRange', [1001, 1500]) }}" class="nav-link">801-1500</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+            <main class="col-md-10">
                 <section class="py-5">
                     <div class="container-fluid">
                         <div class="row">
@@ -168,6 +216,7 @@
                     </div>
         </div>
         </section>
+        @endif
         </main>
     </div>
 </div>
@@ -175,6 +224,6 @@
 
 
 
+@endsection
 
-
-@include('dashboard.footer')
+{{-- @include('dashboard.footer') --}}

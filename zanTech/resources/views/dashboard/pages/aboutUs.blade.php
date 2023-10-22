@@ -1,8 +1,8 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
 
-<section class="py-5 mb-5" style="background: url(images/Banner/background-pattern.png);">
+@extends('dashboard.dashboard')
+
+@section('content')
+<section class="py-5 mb-5" style="background: url({{ asset('images/background-pattern.png') }});">
     <div class="container-fluid">
       <div class="d-flex justify-content-between">
         <h1 class="page-title pb-2">About Us</h1>
@@ -15,7 +15,7 @@
     </div>
   </section>
 
-  <section class="company-detail py-4">
+  <section class="company-detail py-4" >
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
@@ -26,4 +26,5 @@
       </div>
     </div>
   </section
-  @include('dashboard.footer')
+  {{-- @include('dashboard.footer') --}}
+@endsection

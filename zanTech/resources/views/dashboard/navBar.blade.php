@@ -157,14 +157,13 @@
                         </div>
 
                         <div class="offcanvas-body">
-                            <!-- Categories -->
-                            <select class="filter-categories border-0 mb-0 me-5 fw-bold">
-                                <option selected value="">All categories</option>
+                            <select id="categoryDropdown" class="filter-categories border-0 mb-0 me-5 fw-bold" name="category">
+                                <option value="">Select a category</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->catagoryName }}">{{ $category->catagoryName }}
-                                    </option>
+                                    <option  value="{{ $category->catagoryName }}">{{ $category->catagoryName }}</option>
                                 @endforeach
                             </select>
+
                             <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                                 @auth
                                     <a href="{{ url('redirect') }}" class="nav-link fw-bold">Home</a>
@@ -175,7 +174,7 @@
                                     <a href="{{ route('viewShop') }}" class="nav-link fw-bold">Shop</a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a href="" class="nav-link fw-bold">Project</a>
+                                    <a href="{{ route('displayProject') }}" class="nav-link fw-bold">Project</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('showCart') }}" class="nav-link fw-bold">Cart Items</a>
@@ -183,7 +182,7 @@
                                 @if (Route::has('login'))
                                     @auth
                                         <li class="nav-item">
-                                            <a href="{{ route('trackOrder') }}" class="nav-link fw-bold">Track Order</a>
+                                            <a href="{{ route('trackOrder') }}" class="nav-link fw-bold">Order Details</a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('seeFeedback') }}" class="nav-link fw-bold">View
@@ -195,10 +194,10 @@
                                     <a href="#brand" class="nav-link fw-bold">Tutorial</a>
                                 </li> --}}
                                 <li class="nav-item">
-                                    <a href="{{ route('loadStaticPages') }}" class="nav-link fw-bold">About us</a>
+                                    <a href="{{ route('static-page', ['slug' => 'aboutUs'])}}" class="nav-link fw-bold">About us</a>
                                 </li>
                                 <li class="nav-item fw-bold">
-                                    <a href="{{ route('ContactPage') }}" class="nav-link">Contact</a>
+                                    <a href="{{ route('static-page', ['slug' => 'contactPage'])}}" class="nav-link">Contact</a>
                                 </li>
                             </ul>
 
@@ -211,3 +210,17 @@
         </div>
     </div>
 </header>
+<script>
+    const categoryDropdown = document.getElementById('categoryDropdown');
+    const filterCategoriesRoute = "{{ route('filterCategories', ':category') }}";
+
+    categoryDropdown.addEventListener('change', function() {
+        const selectedCategory = categoryDropdown.value;
+
+        if (selectedCategory) {
+            // Use the filterCategoriesRoute JavaScript variable to construct the URL
+            const url = filterCategoriesRoute.replace(':category', selectedCategory);
+            window.location.href = url;
+        }
+    });
+</script>

@@ -1,6 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
+@extends('dashboard.dashboard')
+
+@section('content')
 
 @if ($wishlistItems->isEmpty())
     <section class="py-5 mb-5" style="background: url(images/Banner/background-pattern.png);">
@@ -87,5 +87,4 @@
 </div>
 </div>
 </section>
-
-@include('dashboard.footer')
+@endsection

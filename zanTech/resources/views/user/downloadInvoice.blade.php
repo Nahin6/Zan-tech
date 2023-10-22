@@ -12,16 +12,27 @@
         <div class="invoice_wrapper">
             <div class="header">
                 <div class="logo_invoice_wrap">
-                    @php
-                        $totalGrand = 0; // Initialize a variable for the grand total
-                    @endphp
-
                     @foreach ($orderInvoice as $invoice)
                         @php
-                            $price = $invoice->productPrice;
-                            $quantity = $invoice->productQuantity;
-                            $totalPrice = $price * $quantity;
-                            $totalGrand += $totalPrice; // Add the product total to the grand total
+                        //  $totalGrand = 0;
+                            //   $singleProduct = \App\Models\Product::find($invoice->id);
+                            //     $$singleProductPrice->singleProduct->productPrice
+                            // $price = $invoice->singleProductPrice;
+                            // $quantity = $invoice->productQuantity;
+                            // $totalPrice = $price * $quantity;
+                            // $totalGrand += $totalPrice;
+
+                        $discount = ($invoice->totalBill/100)*$invoice->customerPromoDiscount;
+                            // $deliveryCharge = 0;
+                            //             if ($invoice->deliveryCharge == 'insideDhaka') {
+                            //                 $deliveryCharge = 60;
+                            //             } elseif ($invoice->deliveryCharge == 'outsideDhaka') {
+                            //                 $deliveryCharge = 120;
+                            //             }
+                            //             $totalAmount = $totalGrand + $deliveryCharge;
+                            //             $discount = ( $totalAmount/100)*$invoice->customerPromoDiscount;
+
+                            $finalBIll = $invoice->totalBill-   $discount
                         @endphp
                     @endforeach
 
@@ -30,8 +41,14 @@
                         <div class="title_wrap">
                             <p class="title bold">ZAN Tech</p>
                             <p class="sub_title">Awaken your hidden talent.</p>
+                            <div class="mt-top">
+                                <p class="sub_title">Phone: 01619996782,01627199815</p>
+                                <p class="sub_title">Email: zantechbd@gmail.com</p>
+                            </div>
+
                         </div>
                     </div>
+
 
                     <div class="invoice_sec">
                         <p class="invoice bold">INVOICE</p>
@@ -78,13 +95,13 @@
                                         <p class="bold">{{ $invoice->productName }}</p>
                                     </div>
                                     <div class="col col_price">
-                                        <p>{{ $invoice->productPrice }}</p>
+                                        <p>{{ $invoice->singleProductPrice }}</p>
                                     </div>
                                     <div class="col col_qty">
                                         <p>{{ $invoice->productQuantity }}</p>
                                     </div>
                                     <div class="col col_total">
-                                        <p>{{ $invoice->productPrice * $invoice->productQuantity }}</p>
+                                        <p>{{ $invoice->singleProductPrice * $invoice->productQuantity }}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -96,17 +113,45 @@
                             @if ($invoice->deliveryCharge == 'insideDhaka')
                                 <p class="mt-top">
                                     <span>Delivery Charge</span>
-                                    <span>60</span>
+                                    <span>60 TK</span>
                                 </p>
                             @elseif ($invoice->deliveryCharge == 'outsideDhaka')
                                 <p class="mt-top">
                                     <span>Delivery Charge</span>
-                                    <span>120</span>
+                                    <span>120 TK</span>
                                 </p>
                             @endif
+                            <p class="mt-top">
+                                <span>Total</span>
+                                <span>  {{ $invoice->totalBill }} TK</span>
+                            </p>
+                            @if ($invoice->customerPromoCode)
+                                <p class="mt-top">
+                                    <span>Discount({{ $invoice->customerPromoDiscount }}%)</span>
+                                    <span>- {{ number_format($discount, 0) }} TK</span>
+                                </p>
+                                @endif
+
                             <p class="bold mt-top">
                                 <span>Grand Total</span>
-                                <span>{{ $totalGrand + ($invoice->deliveryCharge == 'insideDhaka' ? 60 : 120) }}</span>
+
+                                <span>
+                                    {{-- @php
+                                        $deliveryCharge = 0;
+                                        if ($invoice->deliveryCharge == 'insideDhaka') {
+                                            $deliveryCharge = 60;
+                                        } elseif ($invoice->deliveryCharge == 'outsideDhaka') {
+                                            $deliveryCharge = 120;
+                                        }
+                                        $totalAmount = $totalGrand + $deliveryCharge;
+                                        $discount = ( $totalAmount/100)*$invoice->customerPromoDiscount;
+                                        $finalAmount =  $totalAmount - $discount;
+                                    @endphp --}}
+                                    {{-- {{ $finalAmount }} TK --}}
+                                    {{ number_format($finalBIll) }} TK
+
+                                </span>
+
                             </p>
                         </div>
                     </div>
@@ -116,7 +161,7 @@
                     <p>Thank you and Best Wishes</p>
                 </div>
 
-        </div>
+            </div>
 
 
 </body>

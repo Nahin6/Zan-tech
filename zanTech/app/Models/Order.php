@@ -18,6 +18,7 @@ class Order extends Model
         'customerCity',
         'customerAditonalNotes',
         'customerPromoCode',
+        'customerPromoDiscount',
         'deliveryCharge',
         'customerPhone',
         'customerEmail',

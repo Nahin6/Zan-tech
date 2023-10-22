@@ -1,6 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
+@extends('dashboard.dashboard')
+
+@section('content')
 
 <section class="shopify-cart checkout-wrap py-5">
     @include('sweetalert::alert')
@@ -139,7 +139,7 @@
         </form>
     </div>
 </section>
-@include('dashboard.footer')
+@endsection
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const totalPriceElement = document.querySelector('#totalPrice');

@@ -1,6 +1,6 @@
-@include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar')
+@extends('dashboard.dashboard')
+
+@section('content')
 @include('sweetalert::alert')
 
 <section class="py-5 mb-5">
@@ -78,4 +78,4 @@
     </div>
 </section>
 
-@include('dashboard.footer')
+@endsection
