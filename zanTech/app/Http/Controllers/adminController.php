@@ -328,6 +328,7 @@ class adminController extends Controller
                 'orders.randInvoice',
                 'orders.orderStatus'
             )
+            ->orderBy('orders.id', 'desc')
             ->get();
             return view('admin.viewOrderDetails', compact('orderItems'));
         }

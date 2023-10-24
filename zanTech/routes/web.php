@@ -27,9 +27,9 @@ Route::get('/', function () {
 Route::controller(authController::class)->group(function () {
 
     Route::get('/redirect', 'LoginFunction')->middleware('load.product');
-    Route::get('/loginnn', 'ViewLogin')->name('userLogin')->middleware();
-    Route::get('/create-account', 'ViewRegister')->name('userRegister')->middleware();
-    Route::get('/logout', 'logoutFunction')->name('userLogout')->middleware();
+    Route::get('/loginnn', 'ViewLogin')->name('userLogin');
+    Route::get('/create-account', 'ViewRegister')->name('userRegister');
+    Route::get('/logout', 'logoutFunction')->name('userLogout');
     Route::get('/veiw-profile', 'userProfile')->name('userProfile');
     Route::post('/update-profile', 'updateInfo')->name('updateNameEmail');
     Route::post('/update-profiles', 'ChangePassword')->name('updatePassword');
@@ -40,33 +40,33 @@ Route::controller(authController::class)->group(function () {
 
 Route::controller(adminController::class)->group(function () {
 
-Route::get('/add-products','addProductPage')->name('addProductPage')->middleware();
+Route::get('/add-products','addProductPage')->name('addProductPage');
 
-Route::get('/add-promo','addPromoCodess')->name('addPromoCode')->middleware();
-Route::post('/add-new-promo','addNewPromoCodes')->name('addNewPromoCodes')->middleware();
-Route::get('/edit-promos/{id}','editPromoCode')->name('editPromoCode')->middleware();
-Route::post('/update-promo/{id}','updatePromoCodes')->name('updatePromoCodes')->middleware();
-Route::get('/delete-promo/{id}','deletePromoCodes')->name('deletePromoCode')->middleware();
-Route::post('/add-new-products','addNewProduct')->name('addProducts')->middleware();
-Route::get('/view-products','ViewProductList')->name('ViewProductList')->middleware();
-Route::get('/delete-products/{id}','DeleteProduct')->name('deleteProduct')->middleware();
-Route::get('/edit-products/{id}','editProduct')->name('editProduct')->middleware();
-Route::post('/update-products/{id}','updateProduct')->name('updateProducts')->middleware();
-Route::get('/edit-Category/{id}','editCategory')->name('editCategory')->middleware();
-Route::post('/update-category/{id}','updateCategoryName')->name('updateCategory')->middleware();
-Route::get('/view-user-details','viewUserInfo')->name('userInformation')->middleware();
-Route::get('/delete-user/{id}','deleteUserInfo')->name('deleteUser')->middleware();
-Route::get('/delete/{id}','deleteCategory')->name('deleteCategory')->middleware();
-Route::get('/search-products', 'searchProducts')->name('searchProducts')->middleware();
-Route::get('/add-new-catagory', 'addCatagory')->name('addCatagoryPage')->middleware();
-Route::post('/add-new-catagory', 'addNewCatagory')->name('addNewCatagory')->middleware();
-Route::get('/order-list', 'OrderListView')->name('OrderList')->middleware();
-Route::get('/order-update/{id}', 'UpdateOrderToProcess')->name('UpdateOrderToProcess')->middleware();
-Route::get('/order-updates/{id}', 'UpdateOrderToDelivered')->name('UpdateOrderToDelivered')->middleware();
-Route::get('/order-out/{id}', 'OutForDeliveryFunction')->name('OutForDelivery')->middleware();
-Route::get('/order-updatess/{id}', 'UpdateOrderToNotAvailable')->name('UpdateOrderToNotAvailable')->middleware();
-Route::get('/order-updatesss/{id}', 'UpdateOrderToPending')->name('UpdateOrderToPending')->middleware();
-Route::get('/delete-updatess/{id}', 'deleteOrder')->name('deleteOrder')->middleware();
+Route::get('/add-promo','addPromoCodess')->name('addPromoCode');
+Route::post('/add-new-promo','addNewPromoCodes')->name('addNewPromoCodes');
+Route::get('/edit-promos/{id}','editPromoCode')->name('editPromoCode');
+Route::post('/update-promo/{id}','updatePromoCodes')->name('updatePromoCodes');
+Route::get('/delete-promo/{id}','deletePromoCodes')->name('deletePromoCode');
+Route::post('/add-new-products','addNewProduct')->name('addProducts');
+Route::get('/view-products','ViewProductList')->name('ViewProductList');
+Route::get('/delete-products/{id}','DeleteProduct')->name('deleteProduct');
+Route::get('/edit-products/{id}','editProduct')->name('editProduct');
+Route::post('/update-products/{id}','updateProduct')->name('updateProducts');
+Route::get('/edit-Category/{id}','editCategory')->name('editCategory');
+Route::post('/update-category/{id}','updateCategoryName')->name('updateCategory');
+Route::get('/view-user-details','viewUserInfo')->name('userInformation');
+Route::get('/delete-user/{id}','deleteUserInfo')->name('deleteUser');
+Route::get('/delete/{id}','deleteCategory')->name('deleteCategory');
+Route::get('/search-products', 'searchProducts')->name('searchProducts');
+Route::get('/add-new-catagory', 'addCatagory')->name('addCatagoryPage');
+Route::post('/add-new-catagory', 'addNewCatagory')->name('addNewCatagory');
+Route::get('/order-list', 'OrderListView')->name('OrderList');
+Route::get('/order-update/{id}', 'UpdateOrderToProcess')->name('UpdateOrderToProcess');
+Route::get('/order-updates/{id}', 'UpdateOrderToDelivered')->name('UpdateOrderToDelivered');
+Route::get('/order-out/{id}', 'OutForDeliveryFunction')->name('OutForDelivery');
+Route::get('/order-updatess/{id}', 'UpdateOrderToNotAvailable')->name('UpdateOrderToNotAvailable');
+Route::get('/order-updatesss/{id}', 'UpdateOrderToPending')->name('UpdateOrderToPending');
+Route::get('/delete-updatess/{id}', 'deleteOrder')->name('deleteOrder');
 
 });
 

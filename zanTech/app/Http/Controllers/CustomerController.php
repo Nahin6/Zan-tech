@@ -6,8 +6,9 @@ use App\Models\CustomerQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-// use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Dompdf;
 use PDF;
+use Dompdf\Dompdf;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\OrderItems;
 use App;
@@ -113,12 +114,16 @@ class CustomerController extends Controller
                 )
                 ->leftJoin('cupons', 'orders.customerPromoCode', '=', 'cupons.promo_code')
                 ->where('orders.id', $id)
-                ->get();
+                ->get()
+                ->toArray();
 
             if (!$orderInvoice) {
                 return redirect()->back()->with('error', 'Order not found.');
             }
+
             // $pdf = pdf::loadView('user.downloadInvoice', compact('orderInvoice'));
+            // $pdf->render();
+            // return $pdf->stream();
             // return $pdf->download('orderInvoice.pdf');
             return View('user.downloadInvoice', compact('orderInvoice'));
         } else {

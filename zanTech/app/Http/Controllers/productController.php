@@ -125,8 +125,9 @@ class productController extends Controller
                 'productImg' => $this->cartProduct->productImg
             ]
         );
-        return view('products.cartProductPage');
+
         Alert::success('Added!!', 'Product added to cart');
+        return redirect()->back();
     }
 
     public function DisplayCartPrduct()
@@ -223,6 +224,7 @@ class productController extends Controller
                 'orderStatus' => 'pending'
 
             ]);
+
             $cartItems = ShoppingCart::all();
 
             // Loop through the cart items and store them in the order_items table
