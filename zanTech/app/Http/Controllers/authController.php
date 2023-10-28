@@ -24,37 +24,43 @@ class authController extends Controller
 
     public function LoginFunction()
     {
+        if (Auth::check()) {
+            // $user = Auth::user();
 
-        $userType = Auth::user()->userType;
+            $userType = Auth::user()->userType;
 
-        if ($userType == 'Admin') {
-            return view('admin.adminDashboard');
-        }
+            if ($userType == 'Admin') {
+                return view('admin.adminDashboard');
+            }
 
-        if ($userType == 0) {
-            // all product withour projects
-            $products = Product::where('catagory', '!=', 'Project')->orderBy('id','desc')->get();
-            //last 10 uploaded product
-            $latestProducts = Product::where('catagory', '!=', 'Project')->latest()->take(10)->get();
-            // most ordered product
-            $trendingProductCounts = DB::table('order_items')
-                ->select('productName', DB::raw('COUNT(*) as order_count'))
-                ->groupBy('productName')
-                ->orderBy('order_count', 'desc')
-                ->limit(15)
-                ->pluck('productName');
-            $trendingProductCounts = $trendingProductCounts->toArray();
+            if ($userType == 0) {
+                // all product withour projects
+                $products = Product::where('catagory', '!=', 'Project')->orderBy('id', 'desc')->get();
+                //last 10 uploaded product
+                $latestProducts = Product::where('catagory', '!=', 'Project')->latest()->take(10)->get();
+                // most ordered product
+                $trendingProductCounts = DB::table('order_items')
+                    ->select('productName', DB::raw('COUNT(*) as order_count'))
+                    ->groupBy('productName')
+                    ->orderBy('order_count', 'desc')
+                    ->limit(15)
+                    ->pluck('productName');
+                $trendingProductCounts = $trendingProductCounts->toArray();
 
-            $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
-                ->get()
-                ->sortBy(function ($product) use ($trendingProductCounts) {
-                    return array_search($product->productName, $trendingProductCounts);
-                });
+                $trendingProducts = Product::whereIn('productName', $trendingProductCounts)
+                    ->get()
+                    ->sortBy(function ($product) use ($trendingProductCounts) {
+                        return array_search($product->productName, $trendingProductCounts);
+                    });
 
-            return view('user.userDashboard', compact('latestProducts', 'products', 'trendingProducts'));
+                return view('user.userDashboard', compact('latestProducts', 'products', 'trendingProducts'));
+            } else {
+                return view('auth.login');
+            }
         } else {
-            return View('auth.login');
-        }
+            return redirect()->route('login'); // Redirect to the login page if the user is not logged in
+        }   
+        
     }
 
     public function logoutFunction()
@@ -129,4 +135,5 @@ class authController extends Controller
             return view('auth.login');
         }
     }
+
 }

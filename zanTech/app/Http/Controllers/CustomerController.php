@@ -49,41 +49,7 @@ class CustomerController extends Controller
             return view('auth.login');
         }
     }
-    // public function downloadOrderToPdf($id) {
-    //     if (Auth::check() && Auth::user()->userType === '0') {
-    //         $orderInvoice = DB::table('orders')
-    //             ->join('order_items', 'orders.id', '=', 'order_items.orderId')
-    //             ->select(
-    //                 'orders.id',
-    //                 'orders.customerName',
-    //                 'orders.customerDivision',
-    //                 'orders.customerCity',
-    //                 'orders.customerStreetAdress',
-    //                 'orders.customerHomeAdress',
-    //                 'orders.customerPhone',
-    //                 'orders.customerEmail',
-    //                 'orders.totalBill',
-    //                 'orders.deliveryCharge',
-    //                 'orders.orderStatus',
-    //                 'orders.randInvoice',
-    //                 'orders.created_at',
-    //                 'order_items.productName',
-    //                 'order_items.productQuantity',
-    //                 'order_items.productPrice',
-    //             )
-    //             ->where('orders.id', $id)
-    //             ->get();
 
-    //         if (!$orderInvoice->isEmpty()) {
-    //             $pdf = PDF::loadView('user.downloadInvoice', compact('orderInvoice'));
-    //             return $pdf->download('order-invoice.pdf');
-    //         } else {
-    //             return redirect()->back()->with('error', 'Order not found.');
-    //         }
-    //     } else {
-    //         return view('auth.login');
-    //     }
-    // }
 
     public function downloadOrderToPdf($id)
     {
@@ -218,9 +184,11 @@ class CustomerController extends Controller
 
     public function filterProductByPrice($minPrice, $maxPrice)
     {
-        $products = Product::whereBetween('productPrice', [$minPrice, $maxPrice])->get();
+        $maxPrice--; // Exclude the maximum value from the range
+        $products = Product::whereBetween('productPrice', [$minPrice, $maxPrice])->where('catagory', '!=', 'Project')->get();
         return view('products.productShop', compact('products'));
     }
+
     public function showStaticPage($slug)
     {
 

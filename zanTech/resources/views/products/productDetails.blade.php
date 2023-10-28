@@ -141,7 +141,11 @@
                         <div class="tab-pane fade show active" id="v-pills-description" role="tabpanel"
                             aria-labelledby="v-pills-description-tab" tabindex="0">
                             <!-- Product Description -->
+                            @if ($productDetails->catagory=='Project')
+                            <h5>Projects Description</h5>
+                            @else
                             <h5>Product Description</h5>
+                            @endif
                             <p>{{ $productDetails->longDetails }}</p>
                         </div>
                     </div>
@@ -158,8 +162,11 @@
                 <div class="col-md-12">
 
                     <div class="section-header d-flex justify-content-between">
-
+                        @if ($productDetails->catagory=='Project')
+                        <h2 class="section-title">Related Projects</h2>
+                        @else
                         <h2 class="section-title">Related Products</h2>
+                        @endif
 
                         <div class="d-flex align-items-center">
                             <a href="#" class="btn-link text-decoration-none">View All Categories →</a>

@@ -98,10 +98,19 @@ class adminController extends Controller
     public function ViewProductList()
     {
         if (Auth::check() && Auth::user()->userType === 'Admin') {
-            $product = Product::where('catagory','!=', 'Project')->get();
-            $category = Catagory::all();
+            $product = Product::where('catagory','!=', 'Project')->orderby('id', 'desc')->get();
+            $category = Catagory::orderby('id', 'desc')->get();
 
             return view('admin.producList', compact('product','category'));
+        } else {
+            return view('auth.login');
+        }
+    }
+    public function ViewAllProjectList()
+    {
+        if (Auth::check() && Auth::user()->userType === 'Admin') {
+            $project = Product::where('catagory','=', 'Project')->orderby('id', 'desc')->get();
+            return view('admin.projectList', compact('project'));
         } else {
             return view('auth.login');
         }

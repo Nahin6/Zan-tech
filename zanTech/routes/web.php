@@ -34,6 +34,8 @@ Route::controller(authController::class)->group(function () {
     Route::post('/update-profile', 'updateInfo')->name('updateNameEmail');
     Route::post('/update-profiles', 'ChangePassword')->name('updatePassword');
 
+
+
 });
 
 
@@ -48,6 +50,7 @@ Route::get('/edit-promos/{id}','editPromoCode')->name('editPromoCode');
 Route::post('/update-promo/{id}','updatePromoCodes')->name('updatePromoCodes');
 Route::get('/delete-promo/{id}','deletePromoCodes')->name('deletePromoCode');
 Route::post('/add-new-products','addNewProduct')->name('addProducts');
+Route::get('/view-new-Project','ViewAllProjectList')->name('ViewProjectList');
 Route::get('/view-products','ViewProductList')->name('ViewProductList');
 Route::get('/delete-products/{id}','DeleteProduct')->name('deleteProduct');
 Route::get('/edit-products/{id}','editProduct')->name('editProduct');

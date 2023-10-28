@@ -7,7 +7,7 @@
 
 
     <title>Zan-tech</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=800">
     <!-- Link cdn  Awesome Font-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- facicon -->
@@ -197,7 +197,7 @@
                     <a class="btn bg-white btn-light mx-1px text-95" href="#" id="downloadInvoice"
                         data-title="PDF">
                         <i class="mr-1 fa fa-file-pdf-o text-danger-m1 text-120 w-2"></i>
-                        PDF
+                        DOWNLOAD
                     </a>
                 </div>
             </div>

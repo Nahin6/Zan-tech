@@ -1,13 +1,10 @@
-{{-- @include('dashboard.links')
-@include('dashboard.topNav')
-@include('dashboard.navBar') --}}
 
 @extends('dashboard.dashboard')
 
 @section('content')
     @if ($products->isEmpty())
-        <div class="shopify-grid">
-            <div class="container-fluid">
+        <div class="shopify-grid" >
+            <div class="container-fluid" >
                 <div class="row g-5">
                     <aside class="col-md-2">
                         <div class="sidebar">
@@ -28,35 +25,35 @@
                                 <h5 class="widget-titlewidget-title">Filter By Price</h5>
                                 <ul class="product-tags sidebar-list list-unstyled">
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [0, 200]) }}"
+                                        <a href="{{ route('filterProductsByPriceRange', [1, 201]) }}"
                                             class="nav-link">0-200</a>
 
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [201, 400]) }}"
-                                            class="nav-link">200-400</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [201, 401]) }}"
+                                            class="nav-link">201-400</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [401, 600]) }}"
-                                            class="nav-link">400-600</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [401, 601]) }}"
+                                            class="nav-link">401-600</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [601, 800]) }}"
-                                            class="nav-link">600-800</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [601, 801]) }}"
+                                            class="nav-link">601-800</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [801, 1000]) }}"
-                                            class="nav-link">800-1000</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [801, 1001]) }}"
+                                            class="nav-link">801-1000</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [1001, 1500]) }}"
-                                            class="nav-link">1000-1500</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [1001, 1501]) }}"
+                                            class="nav-link">1001-1500</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </aside>
-                    <main class="col-md-10">
+                    <main class="col-md-10" >
                         <section class="py-5">
                             <div class="container-fluid">
                                 <div class="row">
@@ -117,29 +114,29 @@
                                 <h5 class="widget-titlewidget-title">Filter By Price</h5>
                                 <ul class="product-tags sidebar-list list-unstyled">
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [0, 200]) }}"
+                                        <a href="{{ route('filterProductsByPriceRange', [1, 201]) }}"
                                             class="nav-link">0-200</a>
 
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [201, 400]) }}"
-                                            class="nav-link">200-400</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [201, 401]) }}"
+                                            class="nav-link">201-400</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [401, 600]) }}"
-                                            class="nav-link">400-600</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [401, 601]) }}"
+                                            class="nav-link">401-600</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [601, 800]) }}"
-                                            class="nav-link">600-800</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [601, 801]) }}"
+                                            class="nav-link">601-800</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [801, 1000]) }}"
-                                            class="nav-link">800-1000</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [801, 1001]) }}"
+                                            class="nav-link">801-1000</a>
                                     </li>
                                     <li class="tags-item">
-                                        <a href="{{ route('filterProductsByPriceRange', [1001, 1500]) }}"
-                                            class="nav-link">801-1500</a>
+                                        <a href="{{ route('filterProductsByPriceRange', [1001, 1501]) }}"
+                                            class="nav-link">1001-1500</a>
                                     </li>
                                 </ul>
                             </div>

@@ -34,6 +34,9 @@
                 <a class="nav-link" href="{{ route('ViewProductList') }}">Product List</a>
             </li>
             <li class="nav-item mt-2">
+                <a class="nav-link" href="{{ route('ViewProjectList') }}">Project List</a>
+            </li>
+            <li class="nav-item mt-2">
                 <a class="nav-link" href="{{ route('OrderList')  }}">Order List</a>
             </li>
             <li class="nav-item mt-2">

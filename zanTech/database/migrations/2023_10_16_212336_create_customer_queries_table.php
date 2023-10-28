@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('customerEmail');
             $table->string('customerPhone');
             $table->string('customerQuerySubject');
-            $table->string('customerDetailsMessage');
+            $table->longText('customerDetailsMessage');
             $table->string('queryStatus');
             $table->string('feedback')->nullable();
             $table->timestamps();

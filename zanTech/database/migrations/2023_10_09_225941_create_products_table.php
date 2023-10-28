@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('productName');
             $table->string('catagory');
-            $table->string('shortDetails');
-            $table->string('longDetails');
+            $table->text('shortDetails');
+            $table->longText('longDetails');
             $table->string('productImg');
             $table->string('productPrice');
             $table->string('productQuantity');
